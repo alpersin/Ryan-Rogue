@@ -1,35 +1,35 @@
 local _G, setmetatable, pairs, type, math    = _G, setmetatable, pairs, type, math
-local huge                                         = math.huge
-local TMW                                         = _G.TMW 
-local Action                                     = _G.Action
-local CONST                                     = Action.Const
-local Listener                                     = Action.Listener
-local Create                                     = Action.Create
-local GetToggle                                    = Action.GetToggle
-local GetLatency                                = Action.GetLatency
-local GetGCD                                    = Action.GetGCD
-local GetCurrentGCD                                = Action.GetCurrentGCD
-local ShouldStop                                = Action.ShouldStop
-local BurstIsON                                    = Action.BurstIsON
-local AuraIsValid                                = Action.AuraIsValid
+local huge         = math.huge
+local TMW         = _G.TMW 
+local Action     = _G.Action
+local CONST     = Action.Const
+local Listener     = Action.Listener
+local Create     = Action.Create
+local GetToggle    = Action.GetToggle
+local GetLatency= Action.GetLatency
+local GetGCD    = Action.GetGCD
+local GetCurrentGCD= Action.GetCurrentGCD
+local ShouldStop= Action.ShouldStop
+local BurstIsON    = Action.BurstIsON
+local AuraIsValid= Action.AuraIsValid
 local InterruptIsValid                            = Action.InterruptIsValid
 local DetermineUsableObject                        = Action.DetermineUsableObject
-local Utils                                        = Action.Utils
-local BossMods                                    = Action.BossMods
-local TeamCache                                   = Action.TeamCache
-local EnemyTeam                                    = Action.EnemyTeam
-local FriendlyTeam                                = Action.FriendlyTeam
-local LoC                                         = Action.LossOfControl
-local Player                                    = Action.Player 
-local MultiUnits                                = Action.MultiUnits
+local Utils        = Action.Utils
+local BossMods    = Action.BossMods
+local TeamCache   = Action.TeamCache
+local EnemyTeam    = Action.EnemyTeam
+local FriendlyTeam= Action.FriendlyTeam
+local LoC         = Action.LossOfControl
+local Player    = Action.Player 
+local MultiUnits= Action.MultiUnits
 local ActiveUnitPlates                            = MultiUnits:GetActiveUnitPlates()
-local UnitCooldown                                = Action.UnitCooldown
-local Unit                                        = Action.Unit 
-local IsUnitEnemy                                = Action.IsUnitEnemy
+local UnitCooldown= Action.UnitCooldown
+local Unit        = Action.Unit 
+local IsUnitEnemy= Action.IsUnitEnemy
 local IsUnitFriendly                            = Action.IsUnitFriendly
-local Combat                                    = Action.Combat
-local DisarmIsReady                                = Action.DisarmIsReady
-local Azerite                                     = LibStub("AzeriteTraits")
+local Combat    = Action.Combat
+local DisarmIsReady= Action.DisarmIsReady
+local Azerite     = LibStub("AzeriteTraits")
 local ACTION_CONST_ROGUE_OUTLAW                 = CONST.ROGUE_OUTLAW
 local ACTION_CONST_AUTOTARGET                    = CONST.AUTOTARGET
 local ACTION_CONST_SPELLID_FREEZING_TRAP        = CONST.SPELLID_FREEZING_TRAP
@@ -37,108 +37,108 @@ local IsIndoors, UnitIsUnit                        = _G.IsIndoors, _G.UnitIsUnit
 
 Action[ACTION_CONST_ROGUE_OUTLAW] = {
     -- Racial
-    ArcaneTorrent                                     = Create({ Type = "Spell", ID = 50613                                              }),
-    BloodFury                                         = Create({ Type = "Spell", ID = 20572                                              }),
-    Fireblood                                       = Create({ Type = "Spell", ID = 265221                                               }),
-    AncestralCall                                   = Create({ Type = "Spell", ID = 274738                                               }),
-    Berserking                                        = Create({ Type = "Spell", ID = 26297                                              }),
-    ArcanePulse                                     = Create({ Type = "Spell", ID = 260364                                               }),
-    QuakingPalm                                     = Create({ Type = "Spell", ID = 107079                                               }),
-    Haymaker                                          = Create({ Type = "Spell", ID = 287712                                             }), 
-    WarStomp                                          = Create({ Type = "Spell", ID = 20549                                              }),
-    BullRush                                          = Create({ Type = "Spell", ID = 255654                                             }),    
-    BagofTricks                                       = Create({ Type = "Spell", ID = 312411                                             }),    
-    GiftofNaaru                                       = Create({ Type = "Spell", ID = 59544                                              }),
-    LightsJudgment                                  = Create({ Type = "Spell", ID = 255647                                               }),
-    Shadowmeld                                      = Create({ Type = "Spell", ID = 58984                                                }), -- usable in Action Core 
-    Stoneform                                       = Create({ Type = "Spell", ID = 20594                                                }), 
-    WilloftheForsaken                               = Create({ Type = "Spell", ID = 7744                                                 }), -- usable in Action Core 
-    EscapeArtist                                      = Create({ Type = "Spell", ID = 20589                                              }), -- usable in Action Core 
-    EveryManforHimself                              = Create({ Type = "Spell", ID = 59752                                                }), -- usable in Action Core  
-    Regeneratin                                     = Create({ Type = "Spell", ID = 291944                                               }), -- not usable in APL but user can Queue it
+    ArcaneTorrent     = Create({ Type = "Spell", ID = 50613   }),
+    BloodFury         = Create({ Type = "Spell", ID = 20572   }),
+    Fireblood       = Create({ Type = "Spell", ID = 265221    }),
+    AncestralCall   = Create({ Type = "Spell", ID = 274738    }),
+    Berserking        = Create({ Type = "Spell", ID = 26297   }),
+    ArcanePulse     = Create({ Type = "Spell", ID = 260364    }),
+    QuakingPalm     = Create({ Type = "Spell", ID = 107079    }),
+    Haymaker= Create({ Type = "Spell", ID = 287712  }), 
+    WarStomp= Create({ Type = "Spell", ID = 20549   }),
+    BullRush= Create({ Type = "Spell", ID = 255654  }),    
+    BagofTricks       = Create({ Type = "Spell", ID = 312411  }),    
+    GiftofNaaru       = Create({ Type = "Spell", ID = 59544   }),
+    LightsJudgment  = Create({ Type = "Spell", ID = 255647    }),
+    Shadowmeld      = Create({ Type = "Spell", ID = 58984     }), -- usable in Action Core 
+    Stoneform       = Create({ Type = "Spell", ID = 20594     }), 
+    WilloftheForsaken                               = Create({ Type = "Spell", ID = 7744      }), -- usable in Action Core 
+    EscapeArtist      = Create({ Type = "Spell", ID = 20589   }), -- usable in Action Core 
+    EveryManforHimself                              = Create({ Type = "Spell", ID = 59752     }), -- usable in Action Core  
+    Regeneratin     = Create({ Type = "Spell", ID = 291944    }), -- not usable in APL but user can Queue it
     -- general
-    Stealth                                         = Create({ Type = "Spell", ID = 1784                                                 }),
-    InstantPoison                                   = Create({ Type = "Spell", ID = 315584                                               }),
-    CripplingPoison                                 = Create({ Type = "Spell", ID = 3408                                                 }),
-    NumbingPoison                                   = Create({ Type = "Spell", ID = 5761                                                 }),
-    WoundPoison                                     = Create({ Type = "Spell", ID = 8679                                                 }),
-    CrimsonVial                                     = Create({ Type = "Spell", ID = 185311                                               }),
-    TricksOfTheTrade                                = Create({ Type = "Spell", ID = 57934                                                }),
+    Stealth         = Create({ Type = "Spell", ID = 1784      }),
+    InstantPoison   = Create({ Type = "Spell", ID = 315584    }),
+    CripplingPoison = Create({ Type = "Spell", ID = 3408      }),
+    NumbingPoison   = Create({ Type = "Spell", ID = 5761      }),
+    WoundPoison     = Create({ Type = "Spell", ID = 8679      }),
+    CrimsonVial     = Create({ Type = "Spell", ID = 185311    }),
+    TricksOfTheTrade= Create({ Type = "Spell", ID = 57934     }),
     -- CDS
-    AdrenalineRush                                      = Create({ Type = "Spell", ID = 186286                                           }),
-    RollTheBones                                    = Create({ Type = "Spell", ID = 193316                                               }),
+    AdrenalineRush      = Create({ Type = "Spell", ID = 186286 }),
+    RollTheBones    = Create({ Type = "Spell", ID = 193316    }),
     --Covenants
-    Sepsis                                            = Create({ Type = "Spell", ID = 328305                                             }),
-    SerratedBoneSpike                               = Create({ Type = "Spell", ID = 328547                                               }),
-    EchoingReprimand                                = Create({ Type = "Spell", ID = 323547                                               }),
-    Flagellation                                    = Create({ Type = "Spell", ID = 323654                                               }),
-    ClaimFlagellation                               = Create({ Type = "Spell", ID = 346975, Hidden = true                                }),
+    Sepsis = Create({ Type = "Spell", ID = 328305  }),
+    SerratedBoneSpike                               = Create({ Type = "Spell", ID = 328547    }),
+    EchoingReprimand= Create({ Type = "Spell", ID = 323547    }),
+    Flagellation    = Create({ Type = "Spell", ID = 323654    }),
+    ClaimFlagellation                               = Create({ Type = "Spell", ID = 346975, Hidden = true}),
     --rollthebonesbuff
-    Broadside                                        = Create({ Type = "Spell", ID = 193356                                              }),
-    BuriedTreasure                                  = Create({ Type = "Spell", ID = 199600                                               }),
-    GrandMelee                                       = Create({ Type = "Spell", ID = 193358                                              }),
-    RuthlessPrecision                               = Create({ Type = "Spell", ID = 193357                                               }),
-    SkullandCrossbones                                 = Create({ Type = "Spell", ID = 199603                                            }),
-    TrueBearing                                        = Create({ Type = "Spell", ID = 193359                                            }),
+    Broadside        = Create({ Type = "Spell", ID = 193356   }),
+    BuriedTreasure  = Create({ Type = "Spell", ID = 199600    }),
+    GrandMelee       = Create({ Type = "Spell", ID = 193358   }),
+    RuthlessPrecision                               = Create({ Type = "Spell", ID = 193357    }),
+    SkullandCrossbones = Create({ Type = "Spell", ID = 199603 }),
+    TrueBearing        = Create({ Type = "Spell", ID = 193359 }),
     --Buffs
-    SliceAndDice                                       = Create({ Type = "Spell", ID = 145418                                            }),
-    DeeperStratagem                                    = Create({ Type = "Spell", ID = 193531                                                                       }),
-    Opportunity                                        = Create({ Type = "Spell", ID = 195627                                                                       }),
-    MarkedForDeath                                     = Create({ Type = "Spell", ID = 137619                                                                      }),
-    FlayedwingToxin                                    = Create({ Type = "Spell", ID = 345545, Hidden = true                                                          }),
-    Soulshape                                          = Create({ Type = "Spell", ID = 310143                                                                       }),
-    Vanish                                             = Create({ Type = "Spell", ID = 1856                                                                         }),
-    VanishStealth                                      = Create({ Type = "Spell", ID = 11327, Hidden = true                                                         }),
-    SepsisStealth                                      = Create({ Type = "Spell", ID = 347037, Hidden = true                                                          }),
-    Elusiveness                                       = Create({ Type = "Spell", ID = 79008                                                                         }),
-    EchoingReprimandBuff                               = Create({ Type = "Spell", ID = 323558    , Hidden = true                                                   }),        
+    SliceAndDice       = Create({ Type = "Spell", ID = 145418 }),
+    DeeperStratagem    = Create({ Type = "Spell", ID = 193531                            }),
+    Opportunity        = Create({ Type = "Spell", ID = 195627                            }),
+    MarkedForDeath     = Create({ Type = "Spell", ID = 137619                           }),
+    FlayedwingToxin    = Create({ Type = "Spell", ID = 345545, Hidden = true               }),
+    Soulshape= Create({ Type = "Spell", ID = 310143                            }),
+    Vanish  = Create({ Type = "Spell", ID = 1856                              }),
+    VanishStealth      = Create({ Type = "Spell", ID = 11327, Hidden = true              }),
+    SepsisStealth      = Create({ Type = "Spell", ID = 347037, Hidden = true               }),
+    Elusiveness       = Create({ Type = "Spell", ID = 79008                              }),
+    EchoingReprimandBuff                               = Create({ Type = "Spell", ID = 323558    , Hidden = true        }),        
     --kick
-    Kick                                               = Create({ Type = "Spell", ID = 1766                                                                           }),
-    KickGreen                                          = Create({ Type = "SpellSingleColor", ID = 1766, Hidden = true, Color = "GREEN", QueueForbidden = true        }),
+    Kick    = Create({ Type = "Spell", ID = 1766}),
+    KickGreen= Create({ Type = "SpellSingleColor", ID = 1766, Hidden = true, Color = "GREEN", QueueForbidden = true        }),
     -- Rotation       
-    Shiv                                              = Create({ Type = "Spell", ID = 5938                                              }),
-    Ambush                                            = Create({ Type = "Spell", ID = 8676                                              }),
-    CheapShot                                       = Create({ Type = "Spell", ID = 1833                                              }),
-    Dispatch                                        = Create({ Type = "Spell", ID = 2098                                              }),
-    PistolShot                                      = Create({ Type = "Spell", ID = 185763                                            }),
-    SinisterStrike                                  = Create({ Type = "Spell", ID = 1752                                              }),
-    BladeFlurry                                     = Create({ Type = "Spell", ID = 13877                                             }),
-    GhostlyStrike                                   = Create({ Type = "Spell", ID = 196937                                            }),
-    KillingSpree                                    = Create({ Type = "Spell", ID = 51690                                             }),
-    BladeRush                                       = Create({ Type = "Spell", ID = 271877                                            }),
-    BetweenTheEyes                                  = Create({ Type = "Spell", ID = 199804                                            }),
-    Gouge                                           = Create({ Type = "Spell", ID = 1776                                              }),
-    Blind                                           = Create({ Type = "Spell", ID = 2094                                              }),
-    Feint                                           = Create({ Type = "Spell", ID = 1966                                              }),
-    KidneyShot                                      = Create({ Type = "Spell", ID = 408                                               }), 
-    Evasion                                         = Create({ Type = "Spell", ID = 5277                                                }), 
-    CloakofShadows                                  = Create({ Type = "Spell", ID = 31224                                                 }), 
+    Shiv   = Create({ Type = "Spell", ID = 5938   }),
+    Ambush = Create({ Type = "Spell", ID = 8676   }),
+    CheapShot       = Create({ Type = "Spell", ID = 1833   }),
+    Dispatch        = Create({ Type = "Spell", ID = 2098   }),
+    PistolShot      = Create({ Type = "Spell", ID = 185763 }),
+    SinisterStrike  = Create({ Type = "Spell", ID = 1752   }),
+    BladeFlurry     = Create({ Type = "Spell", ID = 13877  }),
+    GhostlyStrike   = Create({ Type = "Spell", ID = 196937 }),
+    KillingSpree    = Create({ Type = "Spell", ID = 51690  }),
+    BladeRush       = Create({ Type = "Spell", ID = 271877 }),
+    BetweenTheEyes  = Create({ Type = "Spell", ID = 199804 }),
+    Gouge = Create({ Type = "Spell", ID = 1776   }),
+    Blind 										= Create({ Type = "Spell", ID = 2094   }),
+    Feint 										= Create({ Type = "Spell", ID = 1966   }),
+    KidneyShot      = Create({ Type = "Spell", ID = 408    }), 
+    Evasion         = Create({ Type = "Spell", ID = 5277     }), 
+    CloakofShadows                               = Create({ Type = "Spell", ID = 31224      }), 
     
     -- Items
-    PotionofUnbridledFury                         = Create({ Type = "Potion",  ID = 169299                                          }), 
-    BottledFlayedwingToxin                       = Create({ Type = "Trinket", ID = 178742, Hidden = true                           }),
+    PotionofUnbridledFury                        = Create({ Type = "Potion",  ID = 169299}), 
+    BottledFlayedwingToxin                       = Create({ Type = "Trinket", ID = 178742, Hidden = true}),
     -- Gladiator Badges/Medallions
-    DreadGladiatorsMedallion                     = Create({ Type = "Trinket", ID = 161674                                          }),    
-    DreadCombatantsInsignia                      = Create({ Type = "Trinket", ID = 161676                                          }),    
-    DreadCombatantsMedallion                     = Create({ Type = "Trinket", ID = 161811, Hidden = true                           }),    -- Game has something incorrect with displaying this
-    DreadGladiatorsBadge                         = Create({ Type = "Trinket", ID = 161902                                          }),    
-    DreadAspirantsMedallion                      = Create({ Type = "Trinket", ID = 162897                                          }),    
-    DreadAspirantsBadge                          = Create({ Type = "Trinket", ID = 162966                                          }),    
-    SinisterGladiatorsMedallion                  = Create({ Type = "Trinket", ID = 165055                                          }),    
-    SinisterGladiatorsBadge                      = Create({ Type = "Trinket", ID = 165058                                          }),    
-    SinisterAspirantsMedallion                   = Create({ Type = "Trinket", ID = 165220                                          }),    
-    SinisterAspirantsBadge                       = Create({ Type = "Trinket", ID = 165223                                          }),    
-    NotoriousGladiatorsMedallion                 = Create({ Type = "Trinket", ID = 167377                                          }),    
-    NotoriousGladiatorsBadge                     = Create({ Type = "Trinket", ID = 167380                                          }),    
-    NotoriousAspirantsMedallion                  = Create({ Type = "Trinket", ID = 167525                                          }),    
-    NotoriousAspirantsBadge                      = Create({ Type = "Trinket", ID = 167528                                          }),    
+    DreadGladiatorsMedallion                     = Create({ Type = "Trinket", ID = 161674}),    
+    DreadCombatantsInsignia                      = Create({ Type = "Trinket", ID = 161676}),    
+    DreadCombatantsMedallion                     = Create({ Type = "Trinket", ID = 161811, Hidden = true}),    -- Game has something incorrect with displaying this
+    DreadGladiatorsBadge                         = Create({ Type = "Trinket", ID = 161902}),    
+    DreadAspirantsMedallion                      = Create({ Type = "Trinket", ID = 162897}),    
+    DreadAspirantsBadge                          = Create({ Type = "Trinket", ID = 162966}),    
+    SinisterGladiatorsMedallion                  = Create({ Type = "Trinket", ID = 165055}),    
+    SinisterGladiatorsBadge                      = Create({ Type = "Trinket", ID = 165058}),    
+    SinisterAspirantsMedallion                   = Create({ Type = "Trinket", ID = 165220}),    
+    SinisterAspirantsBadge                       = Create({ Type = "Trinket", ID = 165223}),    
+    NotoriousGladiatorsMedallion                 = Create({ Type = "Trinket", ID = 167377}),    
+    NotoriousGladiatorsBadge                     = Create({ Type = "Trinket", ID = 167380}),    
+    NotoriousAspirantsMedallion                  = Create({ Type = "Trinket", ID = 167525}),    
+    NotoriousAspirantsBadge                      = Create({ Type = "Trinket", ID = 167528}),    
 }
 
 Action:CreateEssencesFor(ACTION_CONST_ROGUE_OUTLAW)
 local A = setmetatable(Action[ACTION_CONST_ROGUE_OUTLAW], { __index = Action })
 
-local player                                = "player"
-local Temp                                  = {
+local player= "player"
+local Temp  = {
     TotalAndPhys                            = {"TotalImun", "DamagePhysImun"},
     TotalAndPhysKick                        = {"TotalImun", "DamagePhysImun", "KickImun"},
     TotalAndPhysAndCC                       = {"TotalImun", "DamagePhysImun", "CCTotalImun"},
@@ -202,7 +202,7 @@ A[1] = function(icon)
     -- if     A.StormBoltGreen:IsReady(nil, true, nil, true) and AntiFakeStun("target")
     -- then 
     --     return A.StormBoltGreen:Show(icon)         
-    -- end                                                                     
+    -- end                          
 end
 
 -- [2] Kick AntiFake Rotation
@@ -218,7 +218,7 @@ A[2] = function(icon)
         local castLeft, _, _, _, notKickAble = Unit(unitID):IsCastingRemains()
         if castLeft > 0 then             
             if not notKickAble and A.Kick:IsReady(unitID, nil, nil, true) and A.Kick:AbsentImun(unitID, Temp.TotalAndPhysKick, true) then
-                return A.KickGreen:Show(icon)                                                  
+                return A.KickGreen:Show(icon)       
             end                   
         end 
     end     
@@ -256,18 +256,18 @@ A[3] = function(icon)
     local inCombat             = Unit(player):CombatTime()                  -- @number 
     local useAoE               = GetToggle(2, "AoE")                        -- @boolean 
     local inDisarm             = LoC:Get("DISARM") > 0                      -- @boolean 
-    local inMelee              = A.Shiv:IsInRange(unitID)                                     -- @boolean 
+    local inMelee              = A.Shiv:IsInRange(unitID)     				-- @boolean 
     local OOCStealth           = GetToggle(2, "OOCStealth")                 -- @boolean
-    local NonLethalPoison        = GetToggle(2, "NonLethalPoison")            -- @string
-    local LethalPoison            = GetToggle(2, "LethalPoison")               -- @string
-    local VanishSetting            = GetToggle(2, "VanishSetting")               -- @boolean
-    local Opener                = GetToggle(2, "Opener")                     -- @string
-    local isStealthed           = Unit(player):HasBuffs(A.Stealth.ID) ~= 0    -- @boolean 
-    local BladeRushRange       = GetToggle(2, "BladeRushRange") 
-    local MultiUnitsEight       = MultiUnits:GetByRange(8)                    -- @number of units in 8 yards
-    local CPMax = (A.DeeperStratagem:IsTalentLearned() and 6 or 5) --@integer 5 or 6
-    local CPCurrent = (Player:ComboPoints())                       --@integer    
-    
+    local NonLethalPoison        = GetToggle(2, "NonLethalPoison")          -- @string
+    local LethalPoison            = GetToggle(2, "LethalPoison")            -- @string
+    local VanishSetting            = GetToggle(2, "VanishSetting")          -- @boolean
+    local Opener                = GetToggle(2, "Opener")                    -- @string
+    local isStealthed           = Unit(player):HasBuffs(A.Stealth.ID) ~= 0  -- @boolean 
+    local BladeRushRange       = GetToggle(2, "BladeRushRange") 			-- @number
+    local MultiUnitsEight       = MultiUnits:GetByRange(8)                  -- @number of units in 8 yards
+    local CPMax = (A.DeeperStratagem:IsTalentLearned() and 6 or 5) 			-- @integer 5 or 6
+    local CPCurrent = (Player:ComboPoints())                       			-- @integer           
+    local isBurst            = BurstIsON(unitID)							-- @boolean
     
     
     --Testing
@@ -288,7 +288,6 @@ A[3] = function(icon)
         
         
         --Interrupts  
-        
         -- Non GCD spell check
         local function countInterruptGCD(unitID)
             if not A.Kick:IsReadyByPassCastGCD(unitID) or not A.Kick:AbsentImun(unitID, Temp.TotalAndPhysKick) then
@@ -296,7 +295,7 @@ A[3] = function(icon)
             end
         end
         
-        if A.GetToggle(2, "InterruptList") 
+        if A.GetToggle(2, "InterruptList") --uses ryan interrupt table
         then
             useKick, useCC, useRacial, notKickAble, castLeft = InterruptIsValid(unitID, "RyanInterrupts", true, countInterruptGCD(unitID))
         else 
@@ -306,20 +305,18 @@ A[3] = function(icon)
             -- useKick
             if useKick 
             and castLeft > 0 
-            and not notKickAble 
+			and not notKickAble 
             and A.AbsentImun(nil, unitID, Temp.TotalAndPhysKick) 
             and A.Kick:IsReady(unitID) then 
                 return A.Kick:Show(icon)
             end
             -- useCC / useRacial
-            if not useKick or notKickAble or A.Kick:GetCooldown() > 0 then
-                
+            if not useKick or notKickAble or A.Kick:GetCooldown() > 0 then 
                 if useCC 
                 and (Unit(player):HasBuffs(A.Stealth.ID) ~= 0 or Unit(player):HasBuffs(A.VanishStealth.ID) ~= 0)
                 and A.CheapShot:IsReady(unitID) 
                 and A.CheapShot:AbsentImun(unitID, Temp.TotalAndPhysAndCC) 
-                and not Unit(unitID):IsBoss() 
-                and  Unit(unitID):IsControlAble("incapacitate") 
+                and Unit(unitID):GetDR("stun") > 0
                 then 
                     return A.CheapShot:Show(icon)       
                 end                 
@@ -328,8 +325,7 @@ A[3] = function(icon)
                 and A.Gouge:IsReady(unitID) 
                 and A.Gouge:AbsentImun(unitID, Temp.TotalAndPhysAndCC) 
                 and Player:IsBehind(.3) 
-                and not Unit(unitID):IsBoss() 
-                and  Unit(unitID):IsControlAble("incapacitate") 
+                and  Unit(unitID):GetDR("incapacitate") > 0 
                 then 
                     return A.Gouge:Show(icon)       
                 end 
@@ -338,8 +334,7 @@ A[3] = function(icon)
                 and A.KidneyShot:IsReady(unitID) 
                 and A.KidneyShot:AbsentImun(unitID, Temp.TotalAndPhysAndCC) 
                 and Player:ComboPoints() >= 1 
-                and not Unit(unitID):IsBoss()
-                and  Unit(unitID):IsControlAble("incapacitate") 
+                and  Unit(unitID):GetDR("stun") > 0
                 then 
                     return A.KidneyShot:Show(icon)       
                 end 
@@ -347,16 +342,13 @@ A[3] = function(icon)
                 if useRacial 
                 and A.QuakingPalm:IsReady(unitID) 
                 and A.QuakingPalm:AbsentImun(unitID, Temp.TotalAndPhysAndCC)  
-                and not Unit(unitID):IsBoss() 
-                and  Unit(unitID):IsControlAble("incapacitate")
+                and  Unit(unitID):GetDR("incapacitate") > 0 
                 then 
                     return A.QuakingPalm:Show(icon)                    
                 end         
                 if useCC  
-                and A.Blind:IsReady(unitID) 
-                and A.Blind:AbsentImun(unitID, Temp.TotalAndPhysAndCC) 
-                and not Unit(unitID):IsBoss()
-                and  Unit(unitID):IsControlAble("disorient")
+                and A.Blind:IsReady(unitID) and A.Blind:AbsentImun(unitID, Temp.TotalAndPhysAndCC) 
+                and Unit(unitID):GetDR("disorient") > 0 
                 then 
                     return A.Blind:Show(icon)
                 end 
@@ -370,8 +362,7 @@ A[3] = function(icon)
         if Unit(unitID):IsExplosives() and A.PistolShot:IsReady(unitID) and not InMelee(unitID) then
             return A.PistolShot:Show(icon)
         end
-        -- Variables        
-        local isBurst            = BurstIsON(unitID)
+
         --Shiv Enrages
         if A.Shiv:IsReady(unitID) and Unit(player):HasBuffs(A.NumbingPoison.ID) ~= 0 and Action.AuraIsValid(unitID, "UseExpelEnrage", "Enrage") then
             return A.Shiv:Show(icon)
@@ -454,7 +445,7 @@ A[3] = function(icon)
                 return A.Stoneform:Show(icon)
             end
         end
-        
+		
         -- [[ Opener ]]
         local function Opener()
             local Opener                = GetToggle(2, "Opener")                     -- @string from ProfileUI
@@ -469,7 +460,6 @@ A[3] = function(icon)
             then
                 return A.SliceAndDice:Show(icon)
             end
-            
             if CheckBuffCountRB() <= 1 and A.RollTheBones:IsReady(unitID, true) and (CheckBuffCountRB() == 0 or (Unit(player):HasBuffs(A.BuriedTreasure.ID) ~= 0 or Unit(player):HasBuffs(A.GrandMelee.ID) ~= 0 or Unit(player):HasBuffs(A.TrueBearing.ID) ~= 0)) 
             and ((not GetToggle(1, "BossMods") and inMelee) or (BossMods:GetPullTimer() > .1 and BossMods:GetPullTimer() <= 1.8))
             then
@@ -481,29 +471,34 @@ A[3] = function(icon)
                 then
                     return A.Ambush:Show(icon)
                 end
-            else
+            end
+	        if Opener == "CheapShot" then
+                if A.CheapShot:IsReady(unitID) 
+                and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0)
+                then		
                 return A.CheapShot:Show(icon)
             end
-            -- terrible Tricks implementation !!!!!!!!DO NOT USE TOGGLE.!!!!!!!! TODO: Check for Tricks on Focus (mounted, range, in party, etc.)
+            -- Tricks with boss mods  works ok in raid use only with @focus macro and Boss Timers checked         TODO: Check for IsReady("focus") on Tricks on Focus mounted, range, in party, etc. might spam tricks during pull timer, but wont stop rotation
             if GetToggle(2, "Tricks") and A.TricksOfTheTrade:IsReady("focus") and (BossMods:GetPullTimer() > .1 and BossMods:GetPullTimer() <= 2.5)then
                 return A.TricksOfTheTrade:Show(icon)
             end    
         end
+		
         -- [[ finishers ]]
-        local function Finishers()
-            
+        local function Finishers() 
             local EchoingBuffCount = Unit(player):HasBuffsStacks(A.EchoingReprimandBuff.ID)
             local Broadside = (Unit(player):HasBuffs(A.Broadside.ID) >= 1) --@boolean
-            if (A.SliceAndDice:IsReady(unitID, true) and Unit(player):HasBuffs(A.SliceAndDice.ID) < (1 + CPCurrent * 1.8  )) and ((CPCurrent >= CPMax-1) or (Broadside and (CPCurrent >= CPMax-2))) then
+            if (A.SliceAndDice:IsReady(unitID, true) and Unit(player):HasBuffs(A.SliceAndDice.ID) < (1 + CPCurrent * 1.8  )) and ((Player:ComboPointsDeficit() <= 1) or (Broadside and (Player:ComboPointsDeficit() <= 2))) then
                 return A.SliceAndDice:Show(icon)
             end
-            if A.BetweenTheEyes:IsReady(unitID) and ((CPCurrent >= CPMax-1 or CPCurrent == EchoingBuffCount) or (Broadside and (CPCurrent >= CPMax-2))) then
+            if A.BetweenTheEyes:IsReady(unitID) and ((Player:ComboPointsDeficit() <= 1 or CPCurrent == EchoingBuffCount) or (Broadside and (Player:ComboPointsDeficit() <= 2))) then
                 return A.BetweenTheEyes:Show(icon)
             end
-            if A.Dispatch:IsReady(unitID) and ((CPCurrent >= CPMax-1 or CPCurrent == EchoingBuffCount) or (Broadside and (CPCurrent >= CPMax-2))) then
+            if A.Dispatch:IsReady(unitID) and ((Player:ComboPointsDeficit() <= 1 or CPCurrent == EchoingBuffCount) or (Broadside and (Player:ComboPointsDeficit() <= 2))) then
                 return A.Dispatch:Show(icon)
             end
         end
+		
         -- [[ CDs ]]
         local function CDs()
             local EightYardTTD = GetByRangeTTD(MultiUnitsEight,8) --@number average time to die of all targets in 8 yards
