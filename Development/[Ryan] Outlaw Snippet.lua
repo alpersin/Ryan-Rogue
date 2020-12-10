@@ -484,21 +484,7 @@ A[3] = function(icon)
             end    
         end
 		
-        -- [[ finishers ]]
-        local function Finishers() 
-            local EchoingBuffCount = Unit(player):HasBuffsStacks(A.EchoingReprimandBuff.ID)
-            local Broadside = (Unit(player):HasBuffs(A.Broadside.ID) >= 1) --@boolean
-            if (A.SliceAndDice:IsReady(unitID, true) and Unit(player):HasBuffs(A.SliceAndDice.ID) < (1 + CPCurrent * 1.8  )) and ((Player:ComboPointsDeficit() <= 1) or (Broadside and (Player:ComboPointsDeficit() <= 2))) then
-                return A.SliceAndDice:Show(icon)
-            end
-            if A.BetweenTheEyes:IsReady(unitID) and ((Player:ComboPointsDeficit() <= 1 or CPCurrent == EchoingBuffCount) or (Broadside and (Player:ComboPointsDeficit() <= 2))) then
-                return A.BetweenTheEyes:Show(icon)
-            end
-            if A.Dispatch:IsReady(unitID) and ((Player:ComboPointsDeficit() <= 1 or CPCurrent == EchoingBuffCount) or (Broadside and (Player:ComboPointsDeficit() <= 2))) then
-                return A.Dispatch:Show(icon)
-            end
-        end
-		
+	
         -- [[ CDs ]]
         local function CDs()
             local EightYardTTD = GetByRangeTTD(MultiUnitsEight,8) --@number average time to die of all targets in 8 yards
@@ -565,6 +551,23 @@ A[3] = function(icon)
             end
         end
         
+		-- [[ finishers ]]
+        local function Finishers() 
+            local EchoingBuffCount = Unit(player):HasBuffsStacks(A.EchoingReprimandBuff.ID)
+            local Broadside = (Unit(player):HasBuffs(A.Broadside.ID) >= 1) --@boolean
+            if (A.SliceAndDice:IsReady(unitID, true) and Unit(player):HasBuffs(A.SliceAndDice.ID) < (1 + CPCurrent * 1.8  )) and ((Player:ComboPointsDeficit() <= 1) or (Broadside and (Player:ComboPointsDeficit() <= 2))) then
+                return A.SliceAndDice:Show(icon)
+            end
+            if A.BetweenTheEyes:IsReady(unitID) and ((Player:ComboPointsDeficit() <= 1 or CPCurrent == EchoingBuffCount) or (Broadside and (Player:ComboPointsDeficit() <= 2))) then
+                return A.BetweenTheEyes:Show(icon)
+            end
+            if A.Dispatch:IsReady(unitID) and ((Player:ComboPointsDeficit() <= 1 or CPCurrent == EchoingBuffCount) or (Broadside and (Player:ComboPointsDeficit() <= 2))) then
+                return A.Dispatch:Show(icon)
+            end
+        end
+		
+		
+		
         -- [[ Single Target ]]
         local function ST()
             local CPMax = (A.DeeperStratagem:IsTalentLearned() and 6 or 5) --@integer 5 or 6
