@@ -89,18 +89,20 @@ Factory[4].RyanInterrupts = StdUi:tGenerateMinMax({
             [322433] = { useKick = true, useCC = false, useRacial = false   }, --Stoneskin;                 Kick
             [321038] = { useKick = true, useCC = false, useRacial = false   }, --Wrack Soul;                Kick            
             --Spires of Ascension
-            [327413] = { useKick = false, useCC = true, useRacial = true    }, --Rebellious Fist;            CC            
+            [327413] = { useKick = true, useCC = false, useRacial = false   }, --Rebellious Fist;            Kick            
             [317936] = { useKick = true, useCC = false, useRacial = false   }, --Forsworn Doctrine;         Kick            
             [317963] = { useKick = true, useCC = false, useRacial = false   }, --Burden of Knowledge;         Kick
             [328295] = { useKick = true, useCC = true, useRacial = true     }, --Greater Mending;            Kick+CC
             [328137] = { useKick = true, useCC = false, useRacial = false   }, --Dark Pulse;                Kick
             [328331] = { useKick = true, useCC = false, useRacial = false   }, --Forced Confession;            Kick
             --Theater of Pain
-            [341902] = { useKick = true, useCC = false, useRacial = false   }, --Unholy Fervor;                Kick            
-            [341969] = { useKick = true, useCC = false, useRacial = false   }, --Withering Discharge;      Kick
+            [341902] = { useKick = true, useCC = false, useRacial = false   }, --Unholy Fervor;         Kick            
+            [341969] = { useKick = true, useCC = false, useRacial = false   }, --Withering Discharge;   Kick
             [342139] = { useKick = true, useCC = false, useRacial = false   }, --Battle Trance;         Kick        
             [330562] = { useKick = true, useCC = false, useRacial = false   }, --Demoralizing Shout;    Kick
-            [330810] = { useKick = true, useCC = true, useRacial = true     }, --Bind Soul;             Kick+CC      
+            [330810] = { useKick = true, useCC = true, useRacial = true     }, --Bind Soul;             Kick+CC  
+            [330586] = { useKick = false, useCC = true, useRacial = true    }, --Devour Flesh			CC 
+	
 			-- Castle Nathria
             [325590] = { useKick = true, useCC = false, useRacial = false   }, --Scornful Blast;		Kick
             [328254] = { useKick = true, useCC = false, useRacial = false   }, --Shattering Ruby;		Kick
