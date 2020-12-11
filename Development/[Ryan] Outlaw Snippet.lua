@@ -29,6 +29,7 @@ local IsUnitEnemy= Action.IsUnitEnemy
 local IsUnitFriendly                            = Action.IsUnitFriendly
 local Combat    = Action.Combat
 local DisarmIsReady= Action.DisarmIsReady
+local LastPlayerCastID=Action.LastPlayerCastID
 local Azerite     = LibStub("AzeriteTraits")
 local ACTION_CONST_ROGUE_OUTLAW                 = CONST.ROGUE_OUTLAW
 local ACTION_CONST_AUTOTARGET                    = CONST.AUTOTARGET
@@ -262,7 +263,8 @@ A[3] = function(icon)
     local LethalPoison            = GetToggle(2, "LethalPoison")            -- @string
     local VanishSetting            = GetToggle(2, "VanishSetting")          -- @boolean
     local Opener                = GetToggle(2, "Opener")                    -- @string
-    local isStealthed           = Unit(player):HasBuffs(A.Stealth.ID) ~= 0  -- @boolean 
+    local isStealthed           = Unit(player):HasBuffs(A.Stealth.ID) ~= 0  -- @boolean
+	local isVanished			= Unit(player):HasBuffs(A.VanishStealth.ID) ~= 0							-- @boolean
     local BladeRushRange       = GetToggle(2, "BladeRushRange") 			-- @number
     local MultiUnitsEight       = MultiUnits:GetByRange(8)                  -- @number of units in 8 yards
     local CPMax = (A.DeeperStratagem:IsTalentLearned() and 6 or 5) 			-- @integer 5 or 6
@@ -489,7 +491,7 @@ A[3] = function(icon)
         local function CDs()
             local EightYardTTD = GetByRangeTTD(MultiUnitsEight,8) --@number average time to die of all targets in 8 yards
             local Item = UseItems(unitID)
-            if Item and not isStealthed then --prevent all items in stealth
+            if Item and not isStealthed and not isVanished then --prevent all items in stealth
                 return Item:Show(icon)
             end
             if A.Fireblood:IsReady(unitID, true) then
@@ -504,11 +506,11 @@ A[3] = function(icon)
             if A.LightsJudgment:IsReady(unitID, true) then
                 return A.LightsJudgment:Show(icon)
             end
-            if (A.Flagellation:IsReady(unitID) and Unit(unitID):HasDeBuffs(A.Flagellation.ID) == 0 and (EightYardTTD > 4 or Unit(unitID):IsBoss()) and not isStealthed)
+            if (A.Flagellation:IsReady(unitID) and not isStealthed and not isVanished and Unit(unitID):HasDeBuffs(A.Flagellation.ID) == 0 and (EightYardTTD > 4 or Unit(unitID):IsBoss()))
             or (Unit(unitID):HasDeBuffs(A.Flagellation.ID) > 0 and Unit(unitID):HasDeBuffs(A.Flagellation.ID) <= 2 or Unit(unitID):HasDeBuffsStacks(A.Flagellation.ID) >= 30) then
                 return A.Flagellation:Show(icon)
             end
-            if A.AdrenalineRush:IsReady(unitID, true) and Unit(player):HasBuffs(A.AdrenalineRush.ID) == 0 and inMelee and (EightYardTTD > 4 or Unit(unitID):IsBoss()) and not isStealthed then
+            if A.AdrenalineRush:IsReady(unitID, true) and Unit(player):HasBuffs(A.AdrenalineRush.ID) == 0 and inMelee and (EightYardTTD > 4 or Unit(unitID):IsBoss()) and not isStealthed and not isVanished then
                 return A.AdrenalineRush:Show(icon)
             end
             if CheckBuffCountRB() <= 1 and A.RollTheBones:IsReady(unitID, true) and (CheckBuffCountRB() == 0 or (Unit(player):HasBuffs(A.BuriedTreasure.ID) ~= 0 or Unit(player):HasBuffs(A.GrandMelee.ID) ~= 0 or Unit(player):HasBuffs(A.TrueBearing.ID) ~= 0)) and inMelee and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0)then
@@ -523,30 +525,30 @@ A[3] = function(icon)
             then
                 return A.MarkedForDeath:Show(icon)
             end
-            if A.GhostlyStrike:IsReady(unitID, true) and not isStealthed  then
+            if A.GhostlyStrike:IsReady(unitID, true) and not isStealthed and not isVanished then
                 return A.GhostlyStrike:Show(icon)
             end
-            if A.KillingSpree:IsReady(unitID) and not isStealthed and Player:EnergyTimeToMax() >= 2.5 and ((MultiUnitsEight >= 2 and Unit(player):HasBuffs(A.BladeFlurry.ID) ~= 0) or MultiUnitsEight <= 1) then
+            if A.KillingSpree:IsReady(unitID) and not isStealthed and not isVanished and Player:EnergyTimeToMax() >= 2.5 and ((MultiUnitsEight >= 2 and Unit(player):HasBuffs(A.BladeFlurry.ID) ~= 0) or MultiUnitsEight <= 1) then
                 return A.KillingSpree:Show(icon)
             end
-            if A.BladeRush:IsReady(unitID) and not isStealthed and (MultiUnitsEight <= 1 or (MultiUnitsEight >= 2 and Unit(player):HasBuffs(A.BladeFlurry.ID) ~= 0)) and ((BladeRushRange <= 6 and inMelee) or (BladeRushRange >= 6))then
+            if A.BladeRush:IsReady(unitID) and not isStealthed and not isVanished and (MultiUnitsEight <= 1 or (MultiUnitsEight >= 2 and Unit(player):HasBuffs(A.BladeFlurry.ID) ~= 0)) and ((BladeRushRange <= 6 and inMelee) or (BladeRushRange >= 6))then
                 return A.BladeRush:Show(icon)
             end
             -- Use Vanish if setting is set to Auto
-            if A.Vanish:IsReady(player) and VanishSetting == 2 and A.Ambush:IsInRange(unitID) and Player:Energy() >= 55 and inCombat > 0 and CPMax-CPCurrent >= 2 and Unit(player):HasBuffs(A.SkullandCrossbones.ID) == 0 then
+            if A.Vanish:IsReady(player) and VanishSetting == 2 and A.Ambush:IsInRange(unitID) and Player:Energy() >= 55 and inCombat > 0 and Player:ComboPointsDeficit() >= 2 and Unit(player):HasBuffs(A.SkullandCrossbones.ID) == 0 then
                 return A.Vanish:Show(icon) 
             end            
             --Use Ambush from Maunal or Auto Vanish
-            if (Unit(player):HasBuffs(A.VanishStealth.ID) ~= 0 or (Action.LastPlayerCastID == 1856 and not isStealthed)) and VanishSetting >=1 and A.Ambush:IsInRange(unitID) then
+            if (Unit(player):HasBuffs(A.VanishStealth.ID) ~= 0 or (LastPlayerCastID == 1856 and not isStealthed)) and VanishSetting >=1 and A.Ambush:IsReady(unitID) then
                 return A.Ambush:Show(icon)  
             end
-            if (A.SerratedBoneSpike:IsReady(unitID) and not isStealthed and (EightYardTTD > 4 or Unit(unitID):IsBoss()) and (Unit(unitID):HasDeBuffs(A.SerratedBoneSpike.ID) == 0 or A.SerratedBoneSpike:GetSpellChargesFrac() >= 2.95 )) or (A.SerratedBoneSpike:IsReady("mouseover") and IsUnitEnemy("mouseover") and Unit("mouseover"):HasDeBuffs(A.SerratedBoneSpike.ID) == 0  and EightYardTTD > 4) then
+            if (A.SerratedBoneSpike:IsReady(unitID) and not isStealthed and not isVanished  and (EightYardTTD > 4 or Unit(unitID):IsBoss()) and (Unit(unitID):HasDeBuffs(A.SerratedBoneSpike.ID) == 0 or A.SerratedBoneSpike:GetSpellChargesFrac() >= 2.95 )) or (A.SerratedBoneSpike:IsReady("mouseover") and IsUnitEnemy("mouseover") and Unit("mouseover"):HasDeBuffs(A.SerratedBoneSpike.ID) == 0  and EightYardTTD > 4) then
                 return A.SerratedBoneSpike:Show(icon)
             end
-            if A.Sepsis:IsReady(unitID) and (EightYardTTD > 4 or Unit(unitID):IsBoss()) and not isStealthed then
+            if A.Sepsis:IsReady(unitID) and (EightYardTTD > 4 or Unit(unitID):IsBoss()) and not isStealthed and not isVanished then
                 return A.Sepsis:Show(icon)
             end
-            if A.EchoingReprimand:IsReady(unitID) and not isStealthed and (EightYardTTD > 4 or Unit(unitID):IsBoss())  then
+            if A.EchoingReprimand:IsReady(unitID) and not isStealthed and not isVanished and (EightYardTTD > 4 or Unit(unitID):IsBoss())  then
                 return A.EchoingReprimand:Show(icon)
             end
         end
@@ -555,7 +557,7 @@ A[3] = function(icon)
         local function Finishers() 
             local EchoingBuffCount = Unit(player):HasBuffsStacks(A.EchoingReprimandBuff.ID)
             local Broadside = (Unit(player):HasBuffs(A.Broadside.ID) >= 1) --@boolean
-            if (A.SliceAndDice:IsReady(unitID, true) and Unit(player):HasBuffs(A.SliceAndDice.ID) < (1 + CPCurrent * 1.8  )) and ((Player:ComboPointsDeficit() <= 1) or (Broadside and (Player:ComboPointsDeficit() <= 2))) then
+            if (A.SliceAndDice:IsReady(unitID, true) and Unit(player):HasBuffs(A.SliceAndDice.ID) < (1 + CPCurrent * 1.8  ) and not isVanished) and ((Player:ComboPointsDeficit() <= 1) or (Broadside and (Player:ComboPointsDeficit() <= 2))) then
                 return A.SliceAndDice:Show(icon)
             end
             if A.BetweenTheEyes:IsReady(unitID) and ((Player:ComboPointsDeficit() <= 1 or CPCurrent == EchoingBuffCount) or (Broadside and (Player:ComboPointsDeficit() <= 2))) then
@@ -565,15 +567,10 @@ A[3] = function(icon)
                 return A.Dispatch:Show(icon)
             end
         end
-		
-		
-		
+
         -- [[ Single Target ]]
         local function ST()
-            local CPMax = (A.DeeperStratagem:IsTalentLearned() and 6 or 5) --@integer 5 or 6
-            local CPCurrent = (Player:ComboPoints())                       --@integer
             local Broadside = (Unit(player):HasBuffs(A.Broadside.ID) >= 1) --@boolean
-            
             --AoE (bladeflurry is also in CD(), this is to ensure correct prioitizaion for Burst on and off. The intent is for useAoE to control bladeflurry, not isBurst.
             if A.BladeFlurry:IsReady(unitID, true) and useAoE and MultiUnitsEight >= 2 and GetByRangeTTD(MultiUnitsEight,8) > 4 and Unit(player):HasBuffs(A.BladeFlurry.ID) <= 2 and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0) then
                 return A.BladeFlurry:Show(icon)
@@ -583,7 +580,7 @@ A[3] = function(icon)
                 return A.Ambush:Show(icon) 
             end
             --Builders
-            if (A.PistolShot:IsReady(unitID, true) and Unit(player):HasBuffs(A.Opportunity.ID) ~= 0) and ((Broadside and CPMax-CPCurrent >= 3) or (not Broadside and CPMax-CPCurrent >= 2))then
+            if (A.PistolShot:IsReady(unitID, true) and Unit(player):HasBuffs(A.Opportunity.ID) ~= 0) and ((Broadside and Player:ComboPointsDeficit() >= 3) or (not Broadside and Player:ComboPointsDeficit() >= 2))then
                 return A.PistolShot:Show(icon)
             end
             if A.SinisterStrike:IsReady(unitID) then
