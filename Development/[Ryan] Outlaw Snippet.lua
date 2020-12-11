@@ -38,21 +38,21 @@ local IsIndoors, UnitIsUnit                        = _G.IsIndoors, _G.UnitIsUnit
 
 Action[ACTION_CONST_ROGUE_OUTLAW] = {
     -- Racial
-    ArcaneTorrent     = Create({ Type = "Spell", ID = 50613   }),
-    BloodFury         = Create({ Type = "Spell", ID = 20572   }),
-    Fireblood       = Create({ Type = "Spell", ID = 265221    }),
-    AncestralCall   = Create({ Type = "Spell", ID = 274738    }),
-    Berserking        = Create({ Type = "Spell", ID = 26297   }),
-    ArcanePulse     = Create({ Type = "Spell", ID = 260364    }),
-    QuakingPalm     = Create({ Type = "Spell", ID = 107079    }),
-    Haymaker= Create({ Type = "Spell", ID = 287712  }), 
-    WarStomp= Create({ Type = "Spell", ID = 20549   }),
-    BullRush= Create({ Type = "Spell", ID = 255654  }),    
-    BagofTricks       = Create({ Type = "Spell", ID = 312411  }),    
-    GiftofNaaru       = Create({ Type = "Spell", ID = 59544   }),
-    LightsJudgment  = Create({ Type = "Spell", ID = 255647    }),
-    Shadowmeld      = Create({ Type = "Spell", ID = 58984     }), -- usable in Action Core 
-    Stoneform       = Create({ Type = "Spell", ID = 20594     }), 
+    ArcaneTorrent = Create({ Type = "Spell", ID = 50613}),
+    BloodFury = Create({ Type = "Spell", ID = 20572}),
+    Fireblood = Create({ Type = "Spell", ID = 265221}),
+    AncestralCall = Create({ Type = "Spell", ID = 274738}),
+    Berserking = Create({ Type = "Spell", ID = 26297}),
+    ArcanePulse     = Create({ Type = "Spell", ID = 260364}),
+    QuakingPalm     = Create({ Type = "Spell", ID = 107079}),
+    Haymaker= Create({ Type = "Spell", ID = 287712}), 
+    WarStomp= Create({ Type = "Spell", ID = 20549}),
+    BullRush= Create({ Type = "Spell", ID = 255654}),    
+    BagofTricks       = Create({ Type = "Spell", ID = 312411}),    
+    GiftofNaaru       = Create({ Type = "Spell", ID = 59544 }),
+    LightsJudgment  = Create({ Type = "Spell", ID = 255647}),
+    Shadowmeld      = Create({ Type = "Spell", ID = 58984}), -- usable in Action Core 
+    Stoneform       = Create({ Type = "Spell", ID = 20594}), 
     WilloftheForsaken                               = Create({ Type = "Spell", ID = 7744      }), -- usable in Action Core 
     EscapeArtist      = Create({ Type = "Spell", ID = 20589   }), -- usable in Action Core 
     EveryManforHimself                              = Create({ Type = "Spell", ID = 59752     }), -- usable in Action Core  
@@ -65,6 +65,7 @@ Action[ACTION_CONST_ROGUE_OUTLAW] = {
     WoundPoison     = Create({ Type = "Spell", ID = 8679      }),
     CrimsonVial     = Create({ Type = "Spell", ID = 185311    }),
     TricksOfTheTrade= Create({ Type = "Spell", ID = 57934     }),
+	PoolResource    = Create({ Type = "Spell", ID = 97238, Hidden = true}),
     -- CDS
     AdrenalineRush      = Create({ Type = "Spell", ID = 186286 }),
     RollTheBones    = Create({ Type = "Spell", ID = 193316    }),
@@ -167,9 +168,6 @@ function Action:IsLatenced(delay)
     return TMW.time - (Temp.CastStartTime[self:Info()] or 0) > (delay or 0.1)
 end
 
-
-
-
 local function GetByRangeTTD(count, range)
     -- @return number
     local total, total_ttd = 0, 0
@@ -239,7 +237,6 @@ local function UseItems(unitID)
     if A.Trinket1:IsReady(unitID) and A.Trinket1:GetItemCategory() ~= "DEFF" and not Temp.IsSlotTrinketBlocked[A.Trinket1.ID] and A.Trinket1:AbsentImun(unitID, Temp.TotalAndMagPhys) then 
         return A.Trinket1
     end 
-    
     if A.Trinket2:IsReady(unitID) and A.Trinket2:GetItemCategory() ~= "DEFF" and not Temp.IsSlotTrinketBlocked[A.Trinket2.ID] and A.Trinket2:AbsentImun(unitID, Temp.TotalAndMagPhys) then 
         return A.Trinket2
     end  
@@ -267,9 +264,7 @@ A[3] = function(icon)
 	local isVanished			= Unit(player):HasBuffs(A.VanishStealth.ID) ~= 0							-- @boolean
     local BladeRushRange       = GetToggle(2, "BladeRushRange") 			-- @number
     local MultiUnitsEight       = MultiUnits:GetByRange(8)                  -- @number of units in 8 yards
-    local CPMax = (A.DeeperStratagem:IsTalentLearned() and 6 or 5) 			-- @integer 5 or 6
     local CPCurrent = (Player:ComboPoints())                       			-- @integer           
-    local isBurst            = BurstIsON(unitID)							-- @boolean
     
     
     --Testing
@@ -283,23 +278,59 @@ A[3] = function(icon)
         --Stop Rotation if Vanish is set to off
         if Unit(player):HasBuffs(A.VanishStealth.ID) ~= 0 and VanishSetting == 0 then return end
         if IsMounted() then return end
-        
-        
-        --testing
-        
-        
-        
-        --Interrupts  
-        -- Non GCD spell check
-        local function countInterruptGCD(unitID)
-            if not A.Kick:IsReadyByPassCastGCD(unitID) or not A.Kick:AbsentImun(unitID, Temp.TotalAndPhysKick) then
-                return true
+        local isBurst = BurstIsON(unitID)							-- @boolean
+
+
+       --testing
+	   
+	   
+	   
+        -- kill Explosive Affix
+        if Unit(unitID):IsExplosives() and A.SinisterStrike:IsReady(unitID) then
+            return A.SinisterStrike:Show(icon)
+        end
+        if Unit(unitID):IsExplosives() and A.PistolShot:IsReady(unitID) and not InMelee(unitID) then
+            return A.PistolShot:Show(icon)
+        end
+
+        --Shiv Enrages
+        if A.Shiv:IsReady(unitID) and Unit(player):HasBuffs(A.NumbingPoison.ID) ~= 0 and Action.AuraIsValid(unitID, "UseExpelEnrage", "Enrage") then
+            return A.Shiv:Show(icon)
+        end 
+        -- Purge
+        if A.ArcaneTorrent:AutoRacial(unitID) then 
+            return A.ArcaneTorrent:Show(icon)
+        end             
+        -- Check RtB
+        local function CheckBuffCountRB() 
+            local count = 0
+            if Unit(player):HasBuffs(A.Broadside.ID) ~= 0 then
+                count = count + 1
             end
+            if Unit(player):HasBuffs(A.BuriedTreasure.ID) ~= 0 then
+                count = count + 1
+            end
+            if Unit(player):HasBuffs(A.GrandMelee.ID) ~= 0 then
+                count = count + 1
+            end
+            if Unit(player):HasBuffs(A.RuthlessPrecision.ID) ~= 0 then
+                count = count + 1
+            end
+            if Unit(player):HasBuffs(A.TrueBearing.ID) ~= 0 then
+                count = count + 1
+            end
+            if Unit(player):HasBuffs(A.SkullandCrossbones.ID) ~= 0 then
+                count = count + 1
+            end
+            return count
         end
         
-        if A.GetToggle(2, "InterruptList") --uses ryan interrupt table
+		
+		
+local function Interrupts()
+	    if A.GetToggle(2, "InterruptList") --uses ryan interrupt table
         then
-            useKick, useCC, useRacial, notKickAble, castLeft = InterruptIsValid(unitID, "RyanInterrupts", true, countInterruptGCD(unitID))
+            useKick, useCC, useRacial, notKickAble, castLeft = InterruptIsValid(unitID, "RyanInterrupts", true)
         else 
             useKick, useCC, useRacial, notKickAble, castLeft = InterruptIsValid(unitID)
         end    
@@ -356,47 +387,8 @@ A[3] = function(icon)
                 end 
             end
         end
-        
-        -- kill Explosive Affix
-        if Unit(unitID):IsExplosives() and A.SinisterStrike:IsReady(unitID) then
-            return A.SinisterStrike:Show(icon)
-        end
-        if Unit(unitID):IsExplosives() and A.PistolShot:IsReady(unitID) and not InMelee(unitID) then
-            return A.PistolShot:Show(icon)
-        end
+	end
 
-        --Shiv Enrages
-        if A.Shiv:IsReady(unitID) and Unit(player):HasBuffs(A.NumbingPoison.ID) ~= 0 and Action.AuraIsValid(unitID, "UseExpelEnrage", "Enrage") then
-            return A.Shiv:Show(icon)
-        end 
-        -- Purge
-        if A.ArcaneTorrent:AutoRacial(unitID) then 
-            return A.ArcaneTorrent:Show(icon)
-        end             
-        -- Check RtB
-        local function CheckBuffCountRB() 
-            local count = 0
-            if Unit(player):HasBuffs(A.Broadside.ID) ~= 0 then
-                count = count + 1
-            end
-            if Unit(player):HasBuffs(A.BuriedTreasure.ID) ~= 0 then
-                count = count + 1
-            end
-            if Unit(player):HasBuffs(A.GrandMelee.ID) ~= 0 then
-                count = count + 1
-            end
-            if Unit(player):HasBuffs(A.RuthlessPrecision.ID) ~= 0 then
-                count = count + 1
-            end
-            if Unit(player):HasBuffs(A.TrueBearing.ID) ~= 0 then
-                count = count + 1
-            end
-            if Unit(player):HasBuffs(A.SkullandCrossbones.ID) ~= 0 then
-                count = count + 1
-            end
-            return count
-        end
-        
         local function Defensives()
             --defensives    
             local Evasion = GetToggle(2, "Evasion")
@@ -479,6 +471,7 @@ A[3] = function(icon)
                 and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0)
                 then		
                 return A.CheapShot:Show(icon)
+				end
             end
             -- Tricks with boss mods  works ok in raid use only with @focus macro and Boss Timers checked         TODO: Check for IsReady("focus") on Tricks on Focus mounted, range, in party, etc. might spam tricks during pull timer, but wont stop rotation
             if GetToggle(2, "Tricks") and A.TricksOfTheTrade:IsReady("focus") and (BossMods:GetPullTimer() > .1 and BossMods:GetPullTimer() <= 2.5)then
@@ -486,7 +479,6 @@ A[3] = function(icon)
             end    
         end
 		
-	
         -- [[ CDs ]]
         local function CDs()
             local EightYardTTD = GetByRangeTTD(MultiUnitsEight,8) --@number average time to die of all targets in 8 yards
@@ -513,14 +505,16 @@ A[3] = function(icon)
             if A.AdrenalineRush:IsReady(unitID, true) and Unit(player):HasBuffs(A.AdrenalineRush.ID) == 0 and inMelee and (EightYardTTD > 4 or Unit(unitID):IsBoss()) and not isStealthed and not isVanished then
                 return A.AdrenalineRush:Show(icon)
             end
-            if CheckBuffCountRB() <= 1 and A.RollTheBones:IsReady(unitID, true) and (CheckBuffCountRB() == 0 or (Unit(player):HasBuffs(A.BuriedTreasure.ID) ~= 0 or Unit(player):HasBuffs(A.GrandMelee.ID) ~= 0 or Unit(player):HasBuffs(A.TrueBearing.ID) ~= 0)) and inMelee and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0)then
+			--RtB is not a cooldown, it is here to ensure correct prioirty with Burst on
+            if CheckBuffCountRB() <= 1 and A.RollTheBones:IsReady(unitID, true) and (CheckBuffCountRB() == 0 or (Unit(player):HasBuffs(A.BuriedTreasure.ID) ~= 0 or Unit(player):HasBuffs(A.GrandMelee.ID) ~= 0 or Unit(player):HasBuffs(A.TrueBearing.ID) ~= 0)) and inMelee and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0) and not isVanished then
                 return A.RollTheBones:Show(icon)
             end    
             --AoE (bladeflurry is also in ST(), this is to ensure correct prioitizaion for isBurst on and off. The intent is for useAoE to control bladeflurry, not isBurst.
             if A.BladeFlurry:IsReady(unitID, true) and useAoE and MultiUnitsEight >= 2 and (EightYardTTD > 4 or Unit(unitID):IsBoss()) and Unit(player):HasBuffs(A.BladeFlurry.ID) <= 2 and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0) then
                 return A.BladeFlurry:Show(icon)
-            end            
-            if A.MarkedForDeath:IsReady(unitID) 
+            end    
+			--MfD is also in ST() it is a CD that resets on death and is used with burst off as well
+            if A.MarkedForDeath:IsReady(unitID) and Player:ComboPointsDeficit() >=4 
             and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0)
             then
                 return A.MarkedForDeath:Show(icon)
@@ -535,13 +529,22 @@ A[3] = function(icon)
                 return A.BladeRush:Show(icon)
             end
             -- Use Vanish if setting is set to Auto
-            if A.Vanish:IsReady(player) and VanishSetting == 2 and A.Ambush:IsInRange(unitID) and Player:Energy() >= 55 and inCombat > 0 and Player:ComboPointsDeficit() >= 2 and Unit(player):HasBuffs(A.SkullandCrossbones.ID) == 0 then
-                return A.Vanish:Show(icon) 
+            if A.Vanish:IsReady(player) and VanishSetting == 2 and inMelee and inCombat > 0 and Player:ComboPointsDeficit() >= 2 and Unit(player):HasBuffs(A.SkullandCrossbones.ID) == 0 then
+				if Player:Energy() <= 51 then 
+				return A.PoolResource:Show(icon)
+				else
+				return A.Vanish:Show(icon) 
+				end
             end            
             --Use Ambush from Maunal or Auto Vanish
-            if (Unit(player):HasBuffs(A.VanishStealth.ID) ~= 0 or (LastPlayerCastID == 1856 and not isStealthed)) and VanishSetting >=1 and A.Ambush:IsReady(unitID) then
-                return A.Ambush:Show(icon)  
-            end
+            if (Unit(player):HasBuffs(A.VanishStealth.ID) ~= 0 or (LastPlayerCastID == 1856 and not isStealthed)) and VanishSetting >=1 and inMelee then
+				if A.Ambush:IsReady(unitID) then
+				return A.Ambush:Show(icon)  
+				end
+				if Player:Energy() <= 51 then 
+				return A.PoolResource:Show(icon)
+				end			
+			end
             if (A.SerratedBoneSpike:IsReady(unitID) and not isStealthed and not isVanished  and (EightYardTTD > 4 or Unit(unitID):IsBoss()) and (Unit(unitID):HasDeBuffs(A.SerratedBoneSpike.ID) == 0 or A.SerratedBoneSpike:GetSpellChargesFrac() >= 2.95 )) or (A.SerratedBoneSpike:IsReady("mouseover") and IsUnitEnemy("mouseover") and Unit("mouseover"):HasDeBuffs(A.SerratedBoneSpike.ID) == 0  and EightYardTTD > 4) then
                 return A.SerratedBoneSpike:Show(icon)
             end
@@ -552,18 +555,17 @@ A[3] = function(icon)
                 return A.EchoingReprimand:Show(icon)
             end
         end
-        
 		-- [[ finishers ]]
         local function Finishers() 
             local EchoingBuffCount = Unit(player):HasBuffsStacks(A.EchoingReprimandBuff.ID)
             local Broadside = (Unit(player):HasBuffs(A.Broadside.ID) >= 1) --@boolean
-            if (A.SliceAndDice:IsReady(unitID, true) and Unit(player):HasBuffs(A.SliceAndDice.ID) < (1 + CPCurrent * 1.8  ) and not isVanished) and ((Player:ComboPointsDeficit() <= 1) or (Broadside and (Player:ComboPointsDeficit() <= 2))) then
+            if (A.SliceAndDice:IsReady(unitID, true) and Unit(player):HasBuffs(A.SliceAndDice.ID) < (1 + CPCurrent * 1.8  ) and not isVanished) and ((Player:ComboPointsDeficit() <= 0) or (Broadside and (Player:ComboPointsDeficit() <= 1))) then
                 return A.SliceAndDice:Show(icon)
             end
-            if A.BetweenTheEyes:IsReady(unitID) and ((Player:ComboPointsDeficit() <= 1 or CPCurrent == EchoingBuffCount) or (Broadside and (Player:ComboPointsDeficit() <= 2))) then
+            if A.BetweenTheEyes:IsReady(unitID) and ((Player:ComboPointsDeficit() <= 0 or CPCurrent == EchoingBuffCount) or (Broadside and (Player:ComboPointsDeficit() <= 1))) then
                 return A.BetweenTheEyes:Show(icon)
             end
-            if A.Dispatch:IsReady(unitID) and ((Player:ComboPointsDeficit() <= 1 or CPCurrent == EchoingBuffCount) or (Broadside and (Player:ComboPointsDeficit() <= 2))) then
+            if A.Dispatch:IsReady(unitID) and ((Player:ComboPointsDeficit() <= 0 or CPCurrent == EchoingBuffCount) or (Broadside and (Player:ComboPointsDeficit() <= 1))) then
                 return A.Dispatch:Show(icon)
             end
         end
@@ -571,9 +573,18 @@ A[3] = function(icon)
         -- [[ Single Target ]]
         local function ST()
             local Broadside = (Unit(player):HasBuffs(A.Broadside.ID) >= 1) --@boolean
+			--RtB is not a cooldown, it is here to ensure use when Burst is off
+			if not isBurst and CheckBuffCountRB() <= 1 and A.RollTheBones:IsReady(unitID, true) and (CheckBuffCountRB() == 0 or (Unit(player):HasBuffs(A.BuriedTreasure.ID) ~= 0 or Unit(player):HasBuffs(A.GrandMelee.ID) ~= 0 or Unit(player):HasBuffs(A.TrueBearing.ID) ~= 0)) and inMelee and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0) and not isVanished then
+				return A.RollTheBones:Show(icon)
+            end 
             --AoE (bladeflurry is also in CD(), this is to ensure correct prioitizaion for Burst on and off. The intent is for useAoE to control bladeflurry, not isBurst.
             if A.BladeFlurry:IsReady(unitID, true) and useAoE and MultiUnitsEight >= 2 and GetByRangeTTD(MultiUnitsEight,8) > 4 and Unit(player):HasBuffs(A.BladeFlurry.ID) <= 2 and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0) then
                 return A.BladeFlurry:Show(icon)
+            end
+			--MfD is a CD that resets if the target dies, no need to hold based on Burst setting
+			if A.MarkedForDeath:IsReady(unitID) and not isBurst and Player:ComboPointsDeficit() >=4 and(not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0) 
+            then
+			    return A.MarkedForDeath:Show(icon)
             end
             --Covenant Builders    
             if Unit(player):HasBuffs(A.SepsisStealth.ID) ~= 0 and A.Ambush:IsInRange(unitID) then
@@ -592,7 +603,11 @@ A[3] = function(icon)
             end
         end
         --end
-        
+ 
+		--INTERRUPTS
+		if Interrupts() then
+			return true
+		end
         --DEFENSIVES
         if Defensives() then    
             return true
@@ -620,7 +635,7 @@ A[3] = function(icon)
         end            
     end   
     
-    --Use BottledFlayedwingToxin if out of combat with other poison. before stealth
+    --Use BottledFlayedwingToxin if out of combat with other poisons. before stealth
     if A.BottledFlayedwingToxin:IsReady(unitID, true) and Unit(player):HasBuffs(A.FlayedwingToxin.ID) == 0 and inCombat == 0 and not IsMounted() then
         return A.BottledFlayedwingToxin:Show(icon)
     end
@@ -629,22 +644,22 @@ A[3] = function(icon)
     end
     --Poisons use UI settings to check if poison selected is ready, already applied and ooc
     if LethalPoison == "InstantPoison" then
-        if A.InstantPoison:IsReady(unitID, true) and A.InstantPoison:IsLatenced(GetGCD() + 0.5)  and Unit(player):HasBuffs(A.InstantPoison.ID) == 0 and inCombat == 0 and not IsMounted() then
+        if A.InstantPoison:IsReady(unitID, true) and A.InstantPoison:IsLatenced(GetGCD() + 0.5)  and Unit(player):HasBuffs(A.InstantPoison.ID) == 0 and inCombat == 0 and not IsMounted() and not isMoving then
             return A.InstantPoison:Show(icon)
         end
     end
     if LethalPoison == "WoundPoison" then
-        if A.WoundPoison:IsReady(unitID, true) and A.InstantPoison:IsLatenced(GetGCD() + 0.5)  and Unit(player):HasBuffs(A.WoundPoison.ID) == 0 and inCombat == 0 and not IsMounted() then
+        if A.WoundPoison:IsReady(unitID, true) and A.InstantPoison:IsLatenced(GetGCD() + 0.5)  and Unit(player):HasBuffs(A.WoundPoison.ID) == 0 and inCombat == 0 and not IsMounted() and not isMoving then
             return A.WoundPoison:Show(icon)
         end
     end
     if NonLethalPoison == "NumbingPoison" then
-        if A.NumbingPoison:IsReady(unitID, true) and A.InstantPoison:IsLatenced(GetGCD() + 0.5)  and Unit(player):HasBuffs(A.NumbingPoison.ID) == 0 and inCombat == 0 and not IsMounted() then
+        if A.NumbingPoison:IsReady(unitID, true) and A.InstantPoison:IsLatenced(GetGCD() + 0.5)  and Unit(player):HasBuffs(A.NumbingPoison.ID) == 0 and inCombat == 0 and not IsMounted() and not isMoving then
             return A.NumbingPoison:Show(icon)
         end
     end
     if NonLethalPoison == "CripplingPoison" then
-        if A.CripplingPoison:IsReady(unitID, true) and A.InstantPoison:IsLatenced(GetGCD() + 0.5)  and Unit(player):HasBuffs(A.CripplingPoison.ID) == 0 and inCombat == 0 and not IsMounted() then
+        if A.CripplingPoison:IsReady(unitID, true) and A.InstantPoison:IsLatenced(GetGCD() + 0.5)  and Unit(player):HasBuffs(A.CripplingPoison.ID) == 0 and inCombat == 0 and not IsMounted() and not isMoving then
             return A.CripplingPoison:Show(icon)
         end
     end    
