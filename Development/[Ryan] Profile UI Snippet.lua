@@ -195,20 +195,6 @@ A.Data.ProfileUI                                     = {
             },
             {
                 {
-                    E               = "Checkbox", 
-                    DB              = "Tricks",
-                    DBV             = false,
-                    L = { 
-                        ANY = "Use Tricks\nOn Pull Timer",
-                    }, 
-                    TT = { 
-                        ANY = "BETA\nUse Tricks on Pull Timers\nSuggest Using @focus macro and set Tank as Focus\nRequires Boss Timers enabled on General Tab\n\nRight click: Create macro",  
-                    }, 
-                    M                 = {},
-                },
-                
-                
-                {
                     E                 = "Checkbox", 
                     DB                 = "MOExplosive",
                     DBV             = true,
@@ -232,9 +218,7 @@ A.Data.ProfileUI                                     = {
                     }, 
                     M                 = {},
                 },
-            },
-            {
-                {
+				{
                     E               = "Checkbox", 
                     DB              = "InterruptList",
                     DBV             = true,
@@ -246,7 +230,6 @@ A.Data.ProfileUI                                     = {
                     }, 
                     M                 = {},
                 },
-
             },
             --[[{ -- [2] Opener 
                 {
