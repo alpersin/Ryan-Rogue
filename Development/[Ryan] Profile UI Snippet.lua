@@ -159,7 +159,7 @@ local SliderMarginOptions = { margin = { top = 10 } }
 local LayoutConfigOptions = { gutter = 6, padding = { left = 5, right = 5 } }
 A.Data.ProfileEnabled[A.CurrentProfile]             = true
 A.Data.ProfileUI                                     = {    
-    DateTime = "v3.0 (10.12.2020) #Interrupts4Days",
+    DateTime = "v3.2 (14.12.2020) #Getin' Dem Fakers",
     [2] = {
         [ACTION_CONST_ROGUE_SUBTLETY] = {                  },
         
