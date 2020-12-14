@@ -34,9 +34,6 @@ TMW:RegisterCallback("TMW_ACTION_INTERRUPTS_UI_CREATE_CATEGORY", function(callba
         Category:SetOptions(Category.options)
 end)
 
-
-
-
 Factory[4].RyanInterrupts = StdUi:tGenerateMinMax({
         [GameLocale] = {
             ISINTERRUPT = true,
@@ -60,6 +57,8 @@ Factory[4].RyanInterrupts = StdUi:tGenerateMinMax({
             [325700] = { useKick = true, useCC = false, useRacial = false   }, --Collect Sins;              Kick
             [325701] = { useKick = true, useCC = true, useRacial = true     }, --Siphon Life;               Kick+CC
             [326607] = { useKick = true, useCC = false, useRacial = false   }, --Turn to Stone;             Kick
+            [323552] = { useKick = true, useCC = false, useRacial = false    }, --Volley of Power; Kick			
+            [323538] = { useKick = true, useCC = false, useRacial = false    }, --Bolt of Power; Kick			
             -- Mists of Tirna Scithe
             [322938] = { useKick = true, useCC = false, useRacial = false   }, --Harvest Essence;           Kick
             [322486] = { useKick = false, useCC = true, useRacial = true    }, --Overgrowth;                CC
@@ -70,47 +69,67 @@ Factory[4].RyanInterrupts = StdUi:tGenerateMinMax({
             [337235] = { useKick = true, useCC = false, useRacial = false   }, --Parasitic Pacification;    Kick
             [337251] = { useKick = true, useCC = false, useRacial = false   }, --Parasitic Incapacitation;  Kick
             [337253] = { useKick = true, useCC = false, useRacial = false   }, --Parasitic Domination;      Kick
+            [326021] = { useKick = false, useCC = true, useRacial = true    }, --Acid Globule;              CC			
+            [331718] = { useKick = false, useCC = true, useRacial = true    }, --Spear Flurry;              CC					
+            [331743] = { useKick = false, useCC = true, useRacial = true    }, --Bucking Rampage;           CC	
+            [322450] = { useKick = true, useCC = false, useRacial = false   }, --Consumption;      Kick
             -- Necrotic Wake
             [334748] = { useKick = true, useCC = true, useRacial = true     }, --Drain Fluids;              Kick+CC
             [320462] = { useKick = true, useCC = false, useRacial = false   }, --Necrotic Bolt;             Kick            
             [324293] = { useKick = true, useCC = true, useRacial = true     }, --Rasping Scream;            Kick+CC            
             [320170] = { useKick = true, useCC = false, useRacial = false   }, --Necrotic Bolt;             Kick            
-            [338353] = { useKick = true, useCC = true, useRacial = true     }, --Goresplatter;                Kick+CC
-            [334748] = { useKick = true, useCC = true, useRacial = true     }, --Drain Fluids;                Kick+CC
+            [338353] = { useKick = true, useCC = true, useRacial = true     }, --Goresplatter;              Kick+CC
+            [334748] = { useKick = true, useCC = true, useRacial = true     }, --Drain Fluids;              Kick+CC
+            [323190] = { useKick = true, useCC = true, useRacial = true     }, --meat shield;               Kick+CC			
+            [335143] = { useKick = false, useCC = false, useRacial = false	}, --Bonemend;				 	Block		Does Damage if shield is broken, dont stop cast	
+            [327130] = { useKick = true, useCC = false, useRacial = false   }, --Repair Flesh;              Kick 
             --Plaguefall
             [328177] = { useKick = false, useCC = true, useRacial = true    }, --Fungistorm;                CC            
-            [330403] = { useKick = false, useCC = true, useRacial = true    }, --Wing Buffet;                CC (need to check)            
-            [318949] = { useKick = false, useCC = true, useRacial = true    }, --Festering Belch;            CC            
+            [330403] = { useKick = false, useCC = false, useRacial = false  }, --Wing Buffet;             	Block           
+            [318949] = { useKick = false, useCC = true, useRacial = true    }, --Festering Belch;           CC            
             [319070] = { useKick = true, useCC = false, useRacial = false   }, --Corrosive Gunk;            Kick            
             [336451] = { useKick = false, useCC = true, useRacial = true    }, --Bulwark of Maldraxxus;     CC            
-            [328400] = { useKick = false, useCC = true, useRacial = true    }, --Stealthlings;                CC            
+            [328400] = { useKick = false, useCC = true, useRacial = true    }, 	--Stealthlings;             CC 
+            [328180] = { useKick = true, useCC = true, useRacial = true     }, 	--Gripping Infection; 		Kick+CC
+            [321999] = { useKick = true, useCC = false, useRacial = false   }, --Viral Globs;            	Kick
+            [328429] = { useKick = false, useCC = true, useRacial = true    }, 	--Crushing Embrace;         CC
+            [328094] = { useKick = true, useCC = false, useRacial = false   }, --Pestilence Bolt;           Kick 			
             --Sanguine Depths
-            [319654] = { useKick = true, useCC = false, useRacial = false   }, --Hungering Drain;             Kick
+            [319654] = { useKick = true, useCC = false, useRacial = false   }, --Hungering Drain;           Kick
             [322433] = { useKick = true, useCC = false, useRacial = false   }, --Stoneskin;                 Kick
-            [321038] = { useKick = true, useCC = false, useRacial = false   }, --Wrack Soul;                Kick            
+            [321038] = { useKick = true, useCC = false, useRacial = false   }, --Wrack Soul;                Kick 
+            [334653] = { useKick = true, useCC = false, useRacial = false    }, --Engorge; Kick
+            [335305] = { useKick = true, useCC = false, useRacial = false    }, --Barbed Shackles; Kick
+            [336277] = { useKick = true, useCC = false, useRacial = false    }, --Explosive Anger; Kick			
+            [326952] = { useKick = true, useCC = false, useRacial = false    }, --Fiery Cantrip Kick
+            [324609] = { useKick = false, useCC = true, useRacial = true    }, --Animate Weapon; CC
+			[326836] = { useKick = true, useCC = true, useRacial = true    }, --Curse of Suppression Kick+CC
             --Spires of Ascension
-            [327413] = { useKick = true, useCC = false, useRacial = false   }, --Rebellious Fist;            Kick            
+            [327413] = { useKick = true, useCC = false, useRacial = false   }, --Rebellious Fist;           Kick            
             [317936] = { useKick = true, useCC = false, useRacial = false   }, --Forsworn Doctrine;         Kick            
-            [317963] = { useKick = true, useCC = false, useRacial = false   }, --Burden of Knowledge;         Kick
-            [328295] = { useKick = true, useCC = true, useRacial = true     }, --Greater Mending;            Kick+CC
+            [317963] = { useKick = true, useCC = false, useRacial = false   }, --Burden of Knowledge;       Kick
+            [328295] = { useKick = true, useCC = true, useRacial = true     }, --Greater Mending;           Kick+CC
             [328137] = { useKick = true, useCC = false, useRacial = false   }, --Dark Pulse;                Kick
-            [328331] = { useKick = true, useCC = false, useRacial = false   }, --Forced Confession;            Kick
+            [328331] = { useKick = true, useCC = false, useRacial = false   }, --Forced Confession;         Kick
             --Theater of Pain
-            [341902] = { useKick = true, useCC = false, useRacial = false   }, --Unholy Fervor;         Kick            
-            [341969] = { useKick = true, useCC = false, useRacial = false   }, --Withering Discharge;   Kick
-            [342139] = { useKick = true, useCC = false, useRacial = false   }, --Battle Trance;         Kick        
-            [330562] = { useKick = true, useCC = false, useRacial = false   }, --Demoralizing Shout;    Kick
-            [330810] = { useKick = true, useCC = true, useRacial = true     }, --Bind Soul;             Kick+CC  
-            [330586] = { useKick = false, useCC = true, useRacial = true    }, --Devour Flesh			CC 
-	
+            [341902] = { useKick = true, useCC = false, useRacial = false   }, --Unholy Fervor;         	Kick            
+            [341969] = { useKick = true, useCC = true, useRacial = true     }, --Withering Discharge		Kick+CC
+            [342139] = { useKick = true, useCC = false, useRacial = false   }, --Battle Trance;         	Kick        
+            [330562] = { useKick = true, useCC = false, useRacial = false   }, --Demoralizing Shout;    	Kick
+            [330810] = { useKick = true, useCC = true, useRacial = true     }, --Bind Soul;             	Kick+CC  
+            [330586] = { useKick = false, useCC = true, useRacial = true    }, --Devour Flesh				CC 
+            [342675] = { useKick = true, useCC = true, useRacial = true     }, --Bone Spear;            	Kick+CC  
+            [330868] = { useKick = true, useCC = true, useRacial = true     }, --Necrotic Bolt volley;  	Kick+CC  
+            [341771] = { useKick = true, useCC = false, useRacial = false   }, --Grave Spike;				Kick			
+			[330532] = { useKick = false, useCC = true, useRacial = true    }, --Jagged Quarrel 			CC						
+            [330875] = { useKick = true, useCC = false, useRacial = false   }, --Spirit Frost;				Kick	
+            [319669] = { useKick = true, useCC = false, useRacial = false   }, --Spectral Reach;			Kick	
 			-- Castle Nathria
-            [325590] = { useKick = true, useCC = false, useRacial = false   }, --Scornful Blast;		Kick
-            [328254] = { useKick = true, useCC = false, useRacial = false   }, --Shattering Ruby;		Kick
-            [333002] = { useKick = true, useCC = false, useRacial = false   }, --Vulgar Brand;			Kick
-            [337110] = { useKick = true, useCC = false, useRacial = false   }, --Dreadbolt Volley;		Kick
-			
-			
-			
+            [325590] = { useKick = true, useCC = false, useRacial = false   }, --Scornful Blast;			Kick
+            [328254] = { useKick = true, useCC = false, useRacial = false   }, --Shattering Ruby;			Kick
+            [333002] = { useKick = true, useCC = false, useRacial = false   }, --Vulgar Brand;				Kick
+            [337110] = { useKick = true, useCC = false, useRacial = false   }, --Dreadbolt Volley;			Kick
+
             --[[ Templates
             [] = { useKick = false, useCC = false, useRacial = false}    , -- Block
             [] = { useKick = true, useCC = true, useRacial = true    }, -- Kick+CC

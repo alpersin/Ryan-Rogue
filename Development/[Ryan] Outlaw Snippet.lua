@@ -1,139 +1,144 @@
-local _G, setmetatable, pairs, type, math    = _G, setmetatable, pairs, type, math
-local huge         = math.huge
-local TMW         = _G.TMW 
-local Action     = _G.Action
-local CONST     = Action.Const
-local Listener     = Action.Listener
-local Create     = Action.Create
-local GetToggle    = Action.GetToggle
-local GetLatency= Action.GetLatency
-local GetGCD    = Action.GetGCD
-local GetCurrentGCD= Action.GetCurrentGCD
-local ShouldStop= Action.ShouldStop
-local BurstIsON    = Action.BurstIsON
-local AuraIsValid= Action.AuraIsValid
-local InterruptIsValid                            = Action.InterruptIsValid
-local DetermineUsableObject                        = Action.DetermineUsableObject
-local Utils        = Action.Utils
-local BossMods    = Action.BossMods
-local TeamCache   = Action.TeamCache
-local EnemyTeam    = Action.EnemyTeam
-local FriendlyTeam= Action.FriendlyTeam
-local LoC         = Action.LossOfControl
-local Player    = Action.Player 
-local MultiUnits= Action.MultiUnits
-local ActiveUnitPlates                            = MultiUnits:GetActiveUnitPlates()
-local UnitCooldown= Action.UnitCooldown
-local Unit        = Action.Unit 
-local IsUnitEnemy= Action.IsUnitEnemy
-local IsUnitFriendly                            = Action.IsUnitFriendly
-local Combat    = Action.Combat
-local DisarmIsReady= Action.DisarmIsReady
-local LastPlayerCastID=Action.LastPlayerCastID
-local Azerite     = LibStub("AzeriteTraits")
-local ACTION_CONST_ROGUE_OUTLAW                 = CONST.ROGUE_OUTLAW
-local ACTION_CONST_AUTOTARGET                    = CONST.AUTOTARGET
-local ACTION_CONST_SPELLID_FREEZING_TRAP        = CONST.SPELLID_FREEZING_TRAP
-local IsIndoors, UnitIsUnit                        = _G.IsIndoors, _G.UnitIsUnit
+local _G, setmetatable, pairs, type, math   = _G, setmetatable, pairs, type, math
+local huge         							= math.huge
+local TMW         							= _G.TMW 
+local Action     							= _G.Action
+local CONST     							= Action.Const
+local Listener     							= Action.Listener
+local Create    							= Action.Create
+local GetToggle    							= Action.GetToggle
+local GetLatency							= Action.GetLatency
+local GetGCD    							= Action.GetGCD
+local GetCurrentGCD							= Action.GetCurrentGCD
+local ShouldStop							= Action.ShouldStop
+local BurstIsON    							= Action.BurstIsON
+local AuraIsValid							= Action.AuraIsValid
+local InterruptIsValid 						= Action.InterruptIsValid
+local DetermineUsableObject 				= Action.DetermineUsableObject
+local Utils        							= Action.Utils
+local BossMods    							= Action.BossMods
+local TeamCache   							= Action.TeamCache
+local EnemyTeam    							= Action.EnemyTeam
+local FriendlyTeam							= Action.FriendlyTeam
+local LoC         							= Action.LossOfControl
+local Player    							= Action.Player 
+local MultiUnits							= Action.MultiUnits
+local ActiveUnitPlates 						= MultiUnits:GetActiveUnitPlates()
+local UnitCooldown							= Action.UnitCooldown
+local Unit        							= Action.Unit 
+local IsUnitEnemy							= Action.IsUnitEnemy
+local IsUnitFriendly 						= Action.IsUnitFriendly
+local Combat    							= Action.Combat
+local DisarmIsReady							= Action.DisarmIsReady
+local LastPlayerCastID						= Action.LastPlayerCastID
+local Azerite     							= LibStub("AzeriteTraits")
+local ACTION_CONST_ROGUE_OUTLAW				= CONST.ROGUE_OUTLAW
+local ACTION_CONST_AUTOTARGET 				= CONST.AUTOTARGET
+local ACTION_CONST_SPELLID_FREEZING_TRAP 	= CONST.SPELLID_FREEZING_TRAP
+local IsIndoors, UnitIsUnit					= _G.IsIndoors, _G.UnitIsUnit
 
 Action[ACTION_CONST_ROGUE_OUTLAW] = {
     -- Racial
-    ArcaneTorrent = Create({ Type = "Spell", ID = 50613}),
-    BloodFury = Create({ Type = "Spell", ID = 20572}),
-    Fireblood = Create({ Type = "Spell", ID = 265221}),
-    AncestralCall = Create({ Type = "Spell", ID = 274738}),
-    Berserking = Create({ Type = "Spell", ID = 26297}),
-    ArcanePulse     = Create({ Type = "Spell", ID = 260364}),
-    QuakingPalm     = Create({ Type = "Spell", ID = 107079}),
-    Haymaker= Create({ Type = "Spell", ID = 287712}), 
-    WarStomp= Create({ Type = "Spell", ID = 20549}),
-    BullRush= Create({ Type = "Spell", ID = 255654}),    
-    BagofTricks       = Create({ Type = "Spell", ID = 312411}),    
-    GiftofNaaru       = Create({ Type = "Spell", ID = 59544 }),
-    LightsJudgment  = Create({ Type = "Spell", ID = 255647}),
-    Shadowmeld      = Create({ Type = "Spell", ID = 58984}), -- usable in Action Core 
-    Stoneform       = Create({ Type = "Spell", ID = 20594}), 
-    WilloftheForsaken                               = Create({ Type = "Spell", ID = 7744      }), -- usable in Action Core 
-    EscapeArtist      = Create({ Type = "Spell", ID = 20589   }), -- usable in Action Core 
-    EveryManforHimself                              = Create({ Type = "Spell", ID = 59752     }), -- usable in Action Core  
-    Regeneratin     = Create({ Type = "Spell", ID = 291944    }), -- not usable in APL but user can Queue it
+    ArcaneTorrent					= Create({ Type = "Spell", ID = 50613}),
+    BloodFury						= Create({ Type = "Spell", ID = 20572}),
+    Fireblood						= Create({ Type = "Spell", ID = 265221}),
+    AncestralCall					= Create({ Type = "Spell", ID = 274738}),
+    Berserking						= Create({ Type = "Spell", ID = 26297}),
+    ArcanePulse						= Create({ Type = "Spell", ID = 260364}),
+    QuakingPalm						= Create({ Type = "Spell", ID = 107079}),
+    Haymaker						= Create({ Type = "Spell", ID = 287712}), 
+    WarStomp						= Create({ Type = "Spell", ID = 20549}),
+    BullRush						= Create({ Type = "Spell", ID = 255654}),    
+    BagofTricks						= Create({ Type = "Spell", ID = 312411}),    
+    GiftofNaaru						= Create({ Type = "Spell", ID = 59544 }),
+    LightsJudgment					= Create({ Type = "Spell", ID = 255647}),
+    Shadowmeld						= Create({ Type = "Spell", ID = 58984}), -- usable in Action Core 
+    Stoneform						= Create({ Type = "Spell", ID = 20594}), 
+    WilloftheForsaken				= Create({ Type = "Spell", ID = 7744}), -- usable in Action Core 
+    EscapeArtist					= Create({ Type = "Spell", ID = 20589}), -- usable in Action Core 
+    EveryManforHimself				= Create({ Type = "Spell", ID = 59752}), -- usable in Action Core  
+    Regeneratin						= Create({ Type = "Spell", ID = 291944}), -- not usable in APL but user can Queue it
     -- general
-    Stealth         = Create({ Type = "Spell", ID = 1784      }),
-    InstantPoison   = Create({ Type = "Spell", ID = 315584    }),
-    CripplingPoison = Create({ Type = "Spell", ID = 3408      }),
-    NumbingPoison   = Create({ Type = "Spell", ID = 5761      }),
-    WoundPoison     = Create({ Type = "Spell", ID = 8679      }),
-    CrimsonVial     = Create({ Type = "Spell", ID = 185311    }),
-    TricksOfTheTrade= Create({ Type = "Spell", ID = 57934     }),
-	PoolResource    = Create({ Type = "Spell", ID = 97238, Hidden = true}),
+    Stealth							= Create({ Type = "Spell", ID = 1784}),
+    InstantPoison					= Create({ Type = "Spell", ID = 315584}),
+    CripplingPoison					= Create({ Type = "Spell", ID = 3408}),
+    NumbingPoison					= Create({ Type = "Spell", ID = 5761}),
+    WoundPoison						= Create({ Type = "Spell", ID = 8679}),
+    CrimsonVial						= Create({ Type = "Spell", ID = 185311}),
+    TricksOfTheTrade				= Create({ Type = "Spell", ID = 57934}),
+	PoolResource					= Create({ Type = "Spell", ID = 97238,Hidden = true}),
+	ShroudOfConcealment				= Create({ Type = "Spell", ID = 114018}),	
     -- CDS
-    AdrenalineRush      = Create({ Type = "Spell", ID = 186286 }),
-    RollTheBones    = Create({ Type = "Spell", ID = 193316    }),
+    AdrenalineRush					= Create({ Type = "Spell", ID = 186286}),
+    RollTheBones					= Create({ Type = "Spell", ID = 193316}),
     --Covenants
-    Sepsis = Create({ Type = "Spell", ID = 328305  }),
-    SerratedBoneSpike                               = Create({ Type = "Spell", ID = 328547    }),
-    EchoingReprimand= Create({ Type = "Spell", ID = 323547    }),
-    Flagellation    = Create({ Type = "Spell", ID = 323654    }),
-    ClaimFlagellation                               = Create({ Type = "Spell", ID = 346975, Hidden = true}),
+    Sepsis							= Create({ Type = "Spell", ID = 328305}),
+    SerratedBoneSpike				= Create({ Type = "Spell", ID = 328547}),
+    EchoingReprimand				= Create({ Type = "Spell", ID = 323547}),
+    Flagellation					= Create({ Type = "Spell", ID = 323654}),
+    ClaimFlagellation				= Create({ Type = "Spell", ID = 346975,Hidden = true}),
+	PhialofSerenity					= Create({ Type = "Spell", ID = 177278}),
     --rollthebonesbuff
-    Broadside        = Create({ Type = "Spell", ID = 193356   }),
-    BuriedTreasure  = Create({ Type = "Spell", ID = 199600    }),
-    GrandMelee       = Create({ Type = "Spell", ID = 193358   }),
-    RuthlessPrecision                               = Create({ Type = "Spell", ID = 193357    }),
-    SkullandCrossbones = Create({ Type = "Spell", ID = 199603 }),
-    TrueBearing        = Create({ Type = "Spell", ID = 193359 }),
+    Broadside						= Create({ Type = "Spell", ID = 193356}),
+    BuriedTreasure					= Create({ Type = "Spell", ID = 199600}),
+    GrandMelee						= Create({ Type = "Spell", ID = 193358}),
+    RuthlessPrecision				= Create({ Type = "Spell", ID = 193357}),
+    SkullandCrossbones				= Create({ Type = "Spell", ID = 199603}),
+    TrueBearing						= Create({ Type = "Spell", ID = 193359}),
     --Buffs
-    SliceAndDice       = Create({ Type = "Spell", ID = 145418 }),
-    DeeperStratagem    = Create({ Type = "Spell", ID = 193531                            }),
-    Opportunity        = Create({ Type = "Spell", ID = 195627                            }),
-    MarkedForDeath     = Create({ Type = "Spell", ID = 137619                           }),
-    FlayedwingToxin    = Create({ Type = "Spell", ID = 345545, Hidden = true               }),
-    Soulshape= Create({ Type = "Spell", ID = 310143                            }),
-    Vanish  = Create({ Type = "Spell", ID = 1856                              }),
-    VanishStealth      = Create({ Type = "Spell", ID = 11327, Hidden = true              }),
-    SepsisStealth      = Create({ Type = "Spell", ID = 347037, Hidden = true               }),
-    Elusiveness       = Create({ Type = "Spell", ID = 79008                              }),
-    EchoingReprimandBuff                               = Create({ Type = "Spell", ID = 323558    , Hidden = true        }),        
+    SliceAndDice					= Create({ Type = "Spell", ID = 145418}),
+    DeeperStratagem					= Create({ Type = "Spell", ID = 193531}),
+    Opportunity						= Create({ Type = "Spell", ID = 195627}),
+    MarkedForDeath					= Create({ Type = "Spell", ID = 137619}),
+    FlayedwingToxin					= Create({ Type = "Spell", ID = 345545,Hidden = true}),
+    Soulshape						= Create({ Type = "Spell", ID = 310143}),
+    Vanish							= Create({ Type = "Spell", ID = 1856}),
+    VanishStealth					= Create({ Type = "Spell", ID = 11327,Hidden = true}),
+    SepsisStealth					= Create({ Type = "Spell", ID = 347037,Hidden = true}),
+    Elusiveness						= Create({ Type = "Spell", ID = 79008}),
+    EchoingReprimandBuff			= Create({ Type = "Spell", ID = 323558,Hidden = true}),        
     --kick
-    Kick    = Create({ Type = "Spell", ID = 1766}),
-    KickGreen= Create({ Type = "SpellSingleColor", ID = 1766, Hidden = true, Color = "GREEN", QueueForbidden = true        }),
+    Kick    						= Create({ Type = "Spell", ID = 1766}),
+    KickGreen						= Create({ Type = "SpellSingleColor",ID = 1766,Hidden = true,Color = "GREEN",QueueForbidden = true}),
+    GougeGreen						= Create({ Type = "SpellSingleColor",ID = 1776,Hidden = true,Color = "GREEN",QueueForbidden = true}),
+    BlindGreen						= Create({ Type = "SpellSingleColor",ID = 2094,Hidden = true,Color = "GREEN",QueueForbidden = true}),	
+    KidneyShotGreen					= Create({ Type = "SpellSingleColor",ID = 408,Hidden = true,Color = "GREEN",QueueForbidden = true}), 	
+    CheapShotGreen					= Create({ Type = "SpellSingleColor",ID = 1833,Hidden = true,Color = "GREEN",QueueForbidden = true}),	
     -- Rotation       
-    Shiv   = Create({ Type = "Spell", ID = 5938   }),
-    Ambush = Create({ Type = "Spell", ID = 8676   }),
-    CheapShot       = Create({ Type = "Spell", ID = 1833   }),
-    Dispatch        = Create({ Type = "Spell", ID = 2098   }),
-    PistolShot      = Create({ Type = "Spell", ID = 185763 }),
-    SinisterStrike  = Create({ Type = "Spell", ID = 1752   }),
-    BladeFlurry     = Create({ Type = "Spell", ID = 13877  }),
-    GhostlyStrike   = Create({ Type = "Spell", ID = 196937 }),
-    KillingSpree    = Create({ Type = "Spell", ID = 51690  }),
-    BladeRush       = Create({ Type = "Spell", ID = 271877 }),
-    BetweenTheEyes  = Create({ Type = "Spell", ID = 199804 }),
-    Gouge = Create({ Type = "Spell", ID = 1776   }),
-    Blind 										= Create({ Type = "Spell", ID = 2094   }),
-    Feint 										= Create({ Type = "Spell", ID = 1966   }),
-    KidneyShot      = Create({ Type = "Spell", ID = 408    }), 
-    Evasion         = Create({ Type = "Spell", ID = 5277     }), 
-    CloakofShadows                               = Create({ Type = "Spell", ID = 31224      }), 
-    
+    Shiv							= Create({ Type = "Spell", ID = 5938}),
+    Ambush							= Create({ Type = "Spell", ID = 8676}),
+    CheapShot						= Create({ Type = "Spell", ID = 1833}),
+    Dispatch						= Create({ Type = "Spell", ID = 2098}),
+    PistolShot						= Create({ Type = "Spell", ID = 185763}),
+    SinisterStrike					= Create({ Type = "Spell", ID = 1752}),
+    BladeFlurry						= Create({ Type = "Spell", ID = 13877}),
+    GhostlyStrike					= Create({ Type = "Spell", ID = 196937}),
+    KillingSpree					= Create({ Type = "Spell", ID = 51690}),
+    BladeRush						= Create({ Type = "Spell", ID = 271877}),
+    BetweenTheEyes					= Create({ Type = "Spell", ID = 199804}),
+    Gouge							= Create({ Type = "Spell", ID = 1776}),
+    Blind							= Create({ Type = "Spell", ID = 2094}),
+    Feint							= Create({ Type = "Spell", ID = 1966}),
+    KidneyShot						= Create({ Type = "Spell", ID = 408}), 
+    Evasion							= Create({ Type = "Spell", ID = 5277}), 
+    CloakofShadows					= Create({ Type = "Spell", ID = 31224}), 
     -- Items
-    PotionofUnbridledFury                        = Create({ Type = "Potion",  ID = 169299}), 
-    BottledFlayedwingToxin                       = Create({ Type = "Trinket", ID = 178742, Hidden = true}),
+    PotionofUnbridledFury			= Create({ Type = "Potion",  ID = 169299}), 
+    BottledFlayedwingToxin			= Create({ Type = "Trinket", ID = 178742,Hidden = true}),
     -- Gladiator Badges/Medallions
-    DreadGladiatorsMedallion                     = Create({ Type = "Trinket", ID = 161674}),    
-    DreadCombatantsInsignia                      = Create({ Type = "Trinket", ID = 161676}),    
-    DreadCombatantsMedallion                     = Create({ Type = "Trinket", ID = 161811, Hidden = true}),    -- Game has something incorrect with displaying this
-    DreadGladiatorsBadge                         = Create({ Type = "Trinket", ID = 161902}),    
-    DreadAspirantsMedallion                      = Create({ Type = "Trinket", ID = 162897}),    
-    DreadAspirantsBadge                          = Create({ Type = "Trinket", ID = 162966}),    
-    SinisterGladiatorsMedallion                  = Create({ Type = "Trinket", ID = 165055}),    
-    SinisterGladiatorsBadge                      = Create({ Type = "Trinket", ID = 165058}),    
-    SinisterAspirantsMedallion                   = Create({ Type = "Trinket", ID = 165220}),    
-    SinisterAspirantsBadge                       = Create({ Type = "Trinket", ID = 165223}),    
-    NotoriousGladiatorsMedallion                 = Create({ Type = "Trinket", ID = 167377}),    
-    NotoriousGladiatorsBadge                     = Create({ Type = "Trinket", ID = 167380}),    
-    NotoriousAspirantsMedallion                  = Create({ Type = "Trinket", ID = 167525}),    
-    NotoriousAspirantsBadge                      = Create({ Type = "Trinket", ID = 167528}),    
+    DreadGladiatorsMedallion		= Create({ Type = "Trinket", ID = 161674}),    
+    DreadCombatantsInsignia			= Create({ Type = "Trinket", ID = 161676}),    
+    DreadCombatantsMedallion		= Create({ Type = "Trinket", ID = 161811,Hidden = true}), -- Game has something incorrect with displaying this
+    DreadGladiatorsBadge			= Create({ Type = "Trinket", ID = 161902}),    
+    DreadAspirantsMedallion			= Create({ Type = "Trinket", ID = 162897}),    
+    DreadAspirantsBadge				= Create({ Type = "Trinket", ID = 162966}),    
+    SinisterGladiatorsMedallion		= Create({ Type = "Trinket", ID = 165055}),    
+    SinisterGladiatorsBadge			= Create({ Type = "Trinket", ID = 165058}),    
+    SinisterAspirantsMedallion		= Create({ Type = "Trinket", ID = 165220}),    
+    SinisterAspirantsBadge			= Create({ Type = "Trinket", ID = 165223}),    
+    NotoriousGladiatorsMedallion	= Create({ Type = "Trinket", ID = 167377}),    
+    NotoriousGladiatorsBadge		= Create({ Type = "Trinket", ID = 167380}),    
+    NotoriousAspirantsMedallion		= Create({ Type = "Trinket", ID = 167525}),    
+    NotoriousAspirantsBadge			= Create({ Type = "Trinket", ID = 167528}),    
 }
 
 Action:CreateEssencesFor(ACTION_CONST_ROGUE_OUTLAW)
@@ -149,9 +154,9 @@ local Temp  = {
     TotalAndMagPhys                         = {"TotalImun", "DamageMagicImun", "DamagePhysImun"},
     DisablePhys                             = {"TotalImun", "DamagePhysImun", "Freedom", "CCTotalImun"},
     BerserkerRageLoC                        = {"FEAR", "INCAPACITATE"},
-    CastStartTime                            = {},
+    CastStartTime                           = {},
     IsSlotTrinketBlocked                    = {
-        [A.BottledFlayedwingToxin.ID]                = true,    
+        [A.BottledFlayedwingToxin.ID]       = true,    
         
     },
 }; do        
@@ -201,9 +206,51 @@ A[1] = function(icon)
     -- if     A.StormBoltGreen:IsReady(nil, true, nil, true) and AntiFakeStun("target")
     -- then 
     --     return A.StormBoltGreen:Show(icon)         
-    -- end                          
+    -- end   
+	local useKick, useCC, useRacial, notKickAble, castLeft = InterruptIsValid("target")   
+		if useKick or useCC or useRacial then                     
+            -- useCC / useRacial
+            if not useKick or notKickAble or A.Kick:GetCooldown() > 0 then 
+                if useCC 
+                and (Unit(player):HasBuffs(A.Stealth.ID) ~= 0 or Unit(player):HasBuffs(A.VanishStealth.ID) ~= 0)
+                and A.CheapShot:IsReady("target") 
+                and A.CheapShot:AbsentImun("target", Temp.TotalAndPhysAndCC) 
+                and Unit("target"):GetDR("stun") > 0
+				and not Unit("target"):IsBoss()
+                then 
+                    return A.CheapShotGreen:Show(icon)       
+                end                 
+                
+                if useCC 
+                and A.Gouge:IsReady("target") 
+                and A.Gouge:AbsentImun("target", Temp.TotalAndPhysAndCC) 
+                and Player:IsBehind(.3) 
+                and  Unit("target"):GetDR("incapacitate") > 0
+				and not Unit("target"):IsBoss()				
+                then 
+                    return A.GougeGreen:Show(icon)       
+                end 
+                
+                if useCC 
+                and A.KidneyShot:IsReady("target") 
+                and A.KidneyShot:AbsentImun("target", Temp.TotalAndPhysAndCC) 
+                and Player:ComboPoints() >= 1 
+                and  Unit("target"):GetDR("stun") > 0
+				and not Unit("target"):IsBoss()
+                then 
+                    return A.KidneyShotGreen:Show(icon)       
+                end 
+                      
+                if useCC  
+                and A.Blind:IsReady("target") and A.Blind:AbsentImun("target", Temp.TotalAndPhysAndCC) 
+                and Unit("target"):GetDR("disorient") > 0
+				and not Unit("target"):IsBoss()
+                then 
+                    return A.BlindGreen:Show(icon)
+                end 
+            end
+		end
 end
-
 -- [2] Kick AntiFake Rotation
 A[2] = function(icon)        
     local unitID
@@ -224,14 +271,6 @@ A[2] = function(icon)
 end
 
 
---[[
-local function countInterruptGCD(unitID)
-    if not A.Kick:IsReadyByPassCastGCD(unitID) or not A.Kick:AbsentImun(unitID, Temp.TotalAndPhysKick, true) then 
-        return true 
-    end 
-end 
---]]
-
 -- Use Items (function call includes stealth prevention)
 local function UseItems(unitID)
     if A.Trinket1:IsReady(unitID) and A.Trinket1:GetItemCategory() ~= "DEFF" and not Temp.IsSlotTrinketBlocked[A.Trinket1.ID] and A.Trinket1:AbsentImun(unitID, Temp.TotalAndMagPhys) then 
@@ -249,22 +288,20 @@ end
 local hasGoneinMelee = false
 -- [3] Single Rotation
 A[3] = function(icon)
-    --local EnemyRotation, FriendlyRotation
-    local isMoving             = Player:IsMoving()                          -- @boolean 
-    local inCombat             = Unit(player):CombatTime()                  -- @number 
-    local useAoE               = GetToggle(2, "AoE")                        -- @boolean 
-    local inDisarm             = LoC:Get("DISARM") > 0                      -- @boolean 
-    local inMelee              = A.Shiv:IsInRange(unitID)     				-- @boolean 
-    local OOCStealth           = GetToggle(2, "OOCStealth")                 -- @boolean
-    local NonLethalPoison        = GetToggle(2, "NonLethalPoison")          -- @string
-    local LethalPoison            = GetToggle(2, "LethalPoison")            -- @string
-    local VanishSetting            = GetToggle(2, "VanishSetting")          -- @boolean
-    local Opener                = GetToggle(2, "Opener")                    -- @string
-    local isStealthed           = Unit(player):HasBuffs(A.Stealth.ID) ~= 0  -- @boolean
-	local isVanished			= Unit(player):HasBuffs(A.VanishStealth.ID) ~= 0							-- @boolean
-    local BladeRushRange       = GetToggle(2, "BladeRushRange") 			-- @number
-    local MultiUnitsEight       = MultiUnits:GetByRange(8)                  -- @number of units in 8 yards
-    local CPCurrent = (Player:ComboPoints())                       			-- @integer           
+    local isMoving          = Player:IsMoving()                          		-- @boolean 
+    local inCombat          = Unit(player):CombatTime()                  		-- @number 
+    local useAoE            = GetToggle(2, "AoE")                        		-- @boolean 
+    local inDisarm          = LoC:Get("DISARM") > 0                      		-- @boolean 
+    local OOCStealth        = GetToggle(2, "OOCStealth")                 		-- @boolean
+    local NonLethalPoison   = GetToggle(2, "NonLethalPoison")          			-- @string
+    local LethalPoison      = GetToggle(2, "LethalPoison")            			-- @string
+    local VanishSetting     = GetToggle(2, "VanishSetting")          			-- @boolean
+    local Opener            = GetToggle(2, "Opener")                    		-- @string
+    local isStealthed       = Unit(player):HasBuffs(A.Stealth.ID) ~= 0  		-- @boolean
+	local isVanished		= Unit(player):HasBuffs(A.VanishStealth.ID) ~= 0	-- @boolean
+    local BladeRushRange    = GetToggle(2, "BladeRushRange") 					-- @number
+    local MultiUnitsEight   = MultiUnits:GetByRange(8)                  		-- @number of units in 8 yards
+    local CPCurrent 		= (Player:ComboPoints())                       		-- @integer           
     
     
     --Testing
@@ -280,19 +317,22 @@ A[3] = function(icon)
         if IsMounted() then return end
         local isBurst = BurstIsON(unitID)							-- @boolean
 
-
        --testing
-	   
-	   
-	   
+
+
+
+
+		--Stealth with target enemy
+		if IsUnitEnemy(unitID) and A.Stealth:IsReady(unitID, true) and Unit(player):HasBuffs(A.Stealth.ID) == 0 and Unit(player):HasBuffs(A.VanishStealth.ID) == 0 and Unit(player):HasBuffs(A.Soulshape.ID) == 0 and not IsMounted() then
+			return A.Stealth:Show(icon)
+		end
         -- kill Explosive Affix
         if Unit(unitID):IsExplosives() and A.SinisterStrike:IsReady(unitID) then
             return A.SinisterStrike:Show(icon)
         end
-        if Unit(unitID):IsExplosives() and A.PistolShot:IsReady(unitID) and not InMelee(unitID) then
+        if Unit(unitID):IsExplosives() and A.PistolShot:IsReady(unitID) and not A.Shiv:IsInRange(unitID) then
             return A.PistolShot:Show(icon)
         end
-
         --Shiv Enrages
         if A.Shiv:IsReady(unitID) and Unit(player):HasBuffs(A.NumbingPoison.ID) ~= 0 and Action.AuraIsValid(unitID, "UseExpelEnrage", "Enrage") then
             return A.Shiv:Show(icon)
@@ -324,15 +364,13 @@ A[3] = function(icon)
             end
             return count
         end
-        
-		
-		
+
 local function Interrupts()
-	    if A.GetToggle(2, "InterruptList") --uses ryan interrupt table
-        then
-            useKick, useCC, useRacial, notKickAble, castLeft = InterruptIsValid(unitID, "RyanInterrupts", true)
-        else 
-            useKick, useCC, useRacial, notKickAble, castLeft = InterruptIsValid(unitID)
+	    if A.GetToggle(2, "InterruptList") and (IsInRaid() or A.InstanceInfo.KeyStone > 1) --uses ryan interrupt table
+			then
+				useKick, useCC, useRacial, notKickAble, castLeft = InterruptIsValid(unitID, "RyanInterrupts", true)
+			else 
+				useKick, useCC, useRacial, notKickAble, castLeft = InterruptIsValid(unitID)
         end    
         if useKick or useCC or useRacial then                     
             -- useKick
@@ -350,6 +388,7 @@ local function Interrupts()
                 and A.CheapShot:IsReady(unitID) 
                 and A.CheapShot:AbsentImun(unitID, Temp.TotalAndPhysAndCC) 
                 and Unit(unitID):GetDR("stun") > 0
+				and not Unit(unitID):IsBoss()
                 then 
                     return A.CheapShot:Show(icon)       
                 end                 
@@ -358,7 +397,8 @@ local function Interrupts()
                 and A.Gouge:IsReady(unitID) 
                 and A.Gouge:AbsentImun(unitID, Temp.TotalAndPhysAndCC) 
                 and Player:IsBehind(.3) 
-                and  Unit(unitID):GetDR("incapacitate") > 0 
+                and  Unit(unitID):GetDR("incapacitate") > 0
+				and not Unit(unitID):IsBoss()				
                 then 
                     return A.Gouge:Show(icon)       
                 end 
@@ -368,6 +408,7 @@ local function Interrupts()
                 and A.KidneyShot:AbsentImun(unitID, Temp.TotalAndPhysAndCC) 
                 and Player:ComboPoints() >= 1 
                 and  Unit(unitID):GetDR("stun") > 0
+				and not Unit(unitID):IsBoss()
                 then 
                     return A.KidneyShot:Show(icon)       
                 end 
@@ -375,13 +416,15 @@ local function Interrupts()
                 if useRacial 
                 and A.QuakingPalm:IsReady(unitID) 
                 and A.QuakingPalm:AbsentImun(unitID, Temp.TotalAndPhysAndCC)  
-                and  Unit(unitID):GetDR("incapacitate") > 0 
+                and  Unit(unitID):GetDR("incapacitate") > 0
+				and not Unit(unitID):IsBoss()				
                 then 
                     return A.QuakingPalm:Show(icon)                    
                 end         
                 if useCC  
                 and A.Blind:IsReady(unitID) and A.Blind:AbsentImun(unitID, Temp.TotalAndPhysAndCC) 
-                and Unit(unitID):GetDR("disorient") > 0 
+                and Unit(unitID):GetDR("disorient") > 0
+				and not Unit(unitID):IsBoss()
                 then 
                     return A.Blind:Show(icon)
                 end 
@@ -434,6 +477,11 @@ local function Interrupts()
             if CrimsonVial >= 0 and A.CrimsonVial:IsReady(player) and Unit(player):HealthPercent() <= CrimsonVial then
                 return A.CrimsonVial:Show(icon)
             end
+			-- PhialofSerenity 
+            local CrimsonVial = GetToggle(2, "CrimsonVial")
+            if CrimsonVial >= 0 and A.PhialofSerenity:IsReady(player) and Unit(player):HealthPercent() <= CrimsonVial-10 then
+                return A.PhialofSerenity:Show(icon)
+            end
             -- Stoneform (Self Dispel)
             if not A.IsInPvP and A.Stoneform:IsRacialReady(player, true) and AuraIsValid(player, "UseDispel", "Dispel") then 
                 return A.Stoneform:Show(icon)
@@ -449,13 +497,14 @@ local function Interrupts()
             then
                 return A.MarkedForDeath:Show(icon)
             end
+
             if A.SliceAndDice:IsReady(unitID, true) and Unit(player):HasBuffs(A.SliceAndDice.ID) <= 9 and Player:ComboPoints() >= 5 
             and (not GetToggle(1, "BossMods") or (BossMods:GetPullTimer() > .1 and BossMods:GetPullTimer() <= 3))
             then
                 return A.SliceAndDice:Show(icon)
             end
             if CheckBuffCountRB() <= 1 and A.RollTheBones:IsReady(unitID, true) and (CheckBuffCountRB() == 0 or (Unit(player):HasBuffs(A.BuriedTreasure.ID) ~= 0 or Unit(player):HasBuffs(A.GrandMelee.ID) ~= 0 or Unit(player):HasBuffs(A.TrueBearing.ID) ~= 0)) 
-            and ((not GetToggle(1, "BossMods") and inMelee) or (BossMods:GetPullTimer() > .1 and BossMods:GetPullTimer() <= 1.8))
+            and ((not GetToggle(1, "BossMods") and A.Shiv:IsInRange(unitID)) or (BossMods:GetPullTimer() > .1 and BossMods:GetPullTimer() <= 1.8))
             then
                 return A.RollTheBones:Show(icon)
             end    
@@ -467,16 +516,17 @@ local function Interrupts()
                 end
             end
 	        if Opener == "CheapShot" then
-                if A.CheapShot:IsReady(unitID) 
-                and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0)
-                then		
-                return A.CheapShot:Show(icon)
+                if A.CheapShot:IsReady(unitID) and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0)then
+				return A.CheapShot:Show(icon)
 				end
             end
             -- Tricks with boss mods  works ok in raid use only with @focus macro and Boss Timers checked         TODO: Check for IsReady("focus") on Tricks on Focus mounted, range, in party, etc. might spam tricks during pull timer, but wont stop rotation
-            if GetToggle(2, "Tricks") and A.TricksOfTheTrade:IsReady("focus") and (BossMods:GetPullTimer() > .1 and BossMods:GetPullTimer() <= 2.5)then
+            if A.TricksOfTheTrade:IsReady("focus") and (BossMods:GetPullTimer() > .1 and BossMods:GetPullTimer() <= 2.5) then
                 return A.TricksOfTheTrade:Show(icon)
-            end    
+            end  
+			if A.ShroudOfConcealment:IsReady(player) and IsInRaid() and (BossMods:GetPullTimer() > .1 and BossMods:GetPullTimer() <= 6) then
+				return A.ShroudOfConcealment:Show(icon)
+			end
         end
 		
         -- [[ CDs ]]
@@ -502,15 +552,15 @@ local function Interrupts()
             or (Unit(unitID):HasDeBuffs(A.Flagellation.ID) > 0 and Unit(unitID):HasDeBuffs(A.Flagellation.ID) <= 2 or Unit(unitID):HasDeBuffsStacks(A.Flagellation.ID) >= 30) then
                 return A.Flagellation:Show(icon)
             end
-            if A.AdrenalineRush:IsReady(unitID, true) and Unit(player):HasBuffs(A.AdrenalineRush.ID) == 0 and inMelee and (EightYardTTD > 4 or Unit(unitID):IsBoss()) and not isStealthed and not isVanished then
+            if A.AdrenalineRush:IsReady(unitID, true) and Unit(player):HasBuffs(A.AdrenalineRush.ID) == 0 and A.Shiv:IsInRange(unitID) and (EightYardTTD > 4 or Unit(unitID):IsBoss()) and not isStealthed and not isVanished then
                 return A.AdrenalineRush:Show(icon)
             end
 			--RtB is not a cooldown, it is here to ensure correct prioirty with Burst on
-            if CheckBuffCountRB() <= 1 and A.RollTheBones:IsReady(unitID, true) and (CheckBuffCountRB() == 0 or (Unit(player):HasBuffs(A.BuriedTreasure.ID) ~= 0 or Unit(player):HasBuffs(A.GrandMelee.ID) ~= 0 or Unit(player):HasBuffs(A.TrueBearing.ID) ~= 0)) and inMelee and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0) and not isVanished then
+            if CheckBuffCountRB() <= 1 and A.RollTheBones:IsReady(unitID, true) and (CheckBuffCountRB() == 0 or (Unit(player):HasBuffs(A.BuriedTreasure.ID) ~= 0 or Unit(player):HasBuffs(A.GrandMelee.ID) ~= 0 or Unit(player):HasBuffs(A.TrueBearing.ID) ~= 0)) and A.Shiv:IsInRange(unitID) and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0) and not isVanished then
                 return A.RollTheBones:Show(icon)
             end    
             --AoE (bladeflurry is also in ST(), this is to ensure correct prioitizaion for isBurst on and off. The intent is for useAoE to control bladeflurry, not isBurst.
-            if A.BladeFlurry:IsReady(unitID, true) and useAoE and MultiUnitsEight >= 2 and (EightYardTTD > 4 or Unit(unitID):IsBoss()) and Unit(player):HasBuffs(A.BladeFlurry.ID) <= 2 and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0) then
+            if A.BladeFlurry:IsReady(unitID, true) and useAoE and MultiUnitsEight >= 2 and (EightYardTTD > 4 or Unit(unitID):IsBoss()) and Unit(player):HasBuffs(A.BladeFlurry.ID) <= 2 and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0) and not isStealthed then
                 return A.BladeFlurry:Show(icon)
             end    
 			--MfD is also in ST() it is a CD that resets on death and is used with burst off as well
@@ -525,11 +575,11 @@ local function Interrupts()
             if A.KillingSpree:IsReady(unitID) and not isStealthed and not isVanished and Player:EnergyTimeToMax() >= 2.5 and ((MultiUnitsEight >= 2 and Unit(player):HasBuffs(A.BladeFlurry.ID) ~= 0) or MultiUnitsEight <= 1) then
                 return A.KillingSpree:Show(icon)
             end
-            if A.BladeRush:IsReady(unitID) and not isStealthed and not isVanished and (MultiUnitsEight <= 1 or (MultiUnitsEight >= 2 and Unit(player):HasBuffs(A.BladeFlurry.ID) ~= 0)) and ((BladeRushRange <= 6 and inMelee) or (BladeRushRange >= 6))then
+            if A.BladeRush:IsReady(unitID) and not isStealthed and not isVanished and (MultiUnitsEight <= 1 or (MultiUnitsEight >= 2 and Unit(player):HasBuffs(A.BladeFlurry.ID) ~= 0)) and ((BladeRushRange <= 6 and A.Shiv:IsInRange(unitID)) or (BladeRushRange >= 6))then
                 return A.BladeRush:Show(icon)
             end
             -- Use Vanish if setting is set to Auto
-            if A.Vanish:IsReady(player) and VanishSetting == 2 and inMelee and inCombat > 0 and Player:ComboPointsDeficit() >= 2 and Unit(player):HasBuffs(A.SkullandCrossbones.ID) == 0 then
+            if A.Vanish:IsReady(player) and VanishSetting == 2 and A.Shiv:IsInRange(unitID) and inCombat > 0 and Player:ComboPointsDeficit() >= 2 and Unit(player):HasBuffs(A.SkullandCrossbones.ID) == 0 then
 				if Player:Energy() <= 51 then 
 				return A.PoolResource:Show(icon)
 				else
@@ -537,7 +587,7 @@ local function Interrupts()
 				end
             end            
             --Use Ambush from Maunal or Auto Vanish
-            if (Unit(player):HasBuffs(A.VanishStealth.ID) ~= 0 or (LastPlayerCastID == 1856 and not isStealthed)) and VanishSetting >=1 and inMelee then
+            if (Unit(player):HasBuffs(A.VanishStealth.ID) ~= 0 or (LastPlayerCastID == 1856 and not isStealthed)) and VanishSetting >=1 and A.Shiv:IsInRange(unitID) then
 				if A.Ambush:IsReady(unitID) then
 				return A.Ambush:Show(icon)  
 				end
@@ -551,7 +601,7 @@ local function Interrupts()
             if A.Sepsis:IsReady(unitID) and (EightYardTTD > 4 or Unit(unitID):IsBoss()) and not isStealthed and not isVanished then
                 return A.Sepsis:Show(icon)
             end
-            if A.EchoingReprimand:IsReady(unitID) and not isStealthed and not isVanished and (EightYardTTD > 4 or Unit(unitID):IsBoss())  then
+            if A.EchoingReprimand:IsReady(unitID) and not isStealthed and not isVanished and (EightYardTTD > 4 or Unit(unitID):IsBoss()) and Player:ComboPointsDeficit() >= 2 then
                 return A.EchoingReprimand:Show(icon)
             end
         end
@@ -559,22 +609,21 @@ local function Interrupts()
         local function Finishers() 
             local EchoingBuffCount = Unit(player):HasBuffsStacks(A.EchoingReprimandBuff.ID)
             local Broadside = (Unit(player):HasBuffs(A.Broadside.ID) >= 1) --@boolean
-            if (A.SliceAndDice:IsReady(unitID, true) and Unit(player):HasBuffs(A.SliceAndDice.ID) < (1 + CPCurrent * 1.8  ) and not isVanished) and ((Player:ComboPointsDeficit() <= 0) or (Broadside and (Player:ComboPointsDeficit() <= 1))) then
+            if (A.SliceAndDice:IsReady(unitID, true) and Unit(player):HasBuffs(A.SliceAndDice.ID) < (1 + CPCurrent * 1.8  ) and not isVanished) and ((Player:ComboPointsDeficit() == 0) or (Broadside and (Player:ComboPointsDeficit() <= 1))) then
                 return A.SliceAndDice:Show(icon)
             end
-            if A.BetweenTheEyes:IsReady(unitID) and ((Player:ComboPointsDeficit() <= 0 or CPCurrent == EchoingBuffCount) or (Broadside and (Player:ComboPointsDeficit() <= 1))) then
+            if A.BetweenTheEyes:IsReady(unitID) and ((Player:ComboPointsDeficit() == 0 or CPCurrent == EchoingBuffCount) or (Broadside and (Player:ComboPointsDeficit() <= 1))) then
                 return A.BetweenTheEyes:Show(icon)
             end
-            if A.Dispatch:IsReady(unitID) and ((Player:ComboPointsDeficit() <= 0 or CPCurrent == EchoingBuffCount) or (Broadside and (Player:ComboPointsDeficit() <= 1))) then
+            if A.Dispatch:IsReady(unitID) and ((Player:ComboPointsDeficit() == 0 or CPCurrent == EchoingBuffCount) or (Broadside and (Player:ComboPointsDeficit() <= 1))) then
                 return A.Dispatch:Show(icon)
             end
         end
-
         -- [[ Single Target ]]
         local function ST()
             local Broadside = (Unit(player):HasBuffs(A.Broadside.ID) >= 1) --@boolean
 			--RtB is not a cooldown, it is here to ensure use when Burst is off
-			if not isBurst and CheckBuffCountRB() <= 1 and A.RollTheBones:IsReady(unitID, true) and (CheckBuffCountRB() == 0 or (Unit(player):HasBuffs(A.BuriedTreasure.ID) ~= 0 or Unit(player):HasBuffs(A.GrandMelee.ID) ~= 0 or Unit(player):HasBuffs(A.TrueBearing.ID) ~= 0)) and inMelee and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0) and not isVanished then
+			if not isBurst and CheckBuffCountRB() <= 1 and A.RollTheBones:IsReady(unitID, true) and (CheckBuffCountRB() == 0 or (Unit(player):HasBuffs(A.BuriedTreasure.ID) ~= 0 or Unit(player):HasBuffs(A.GrandMelee.ID) ~= 0 or Unit(player):HasBuffs(A.TrueBearing.ID) ~= 0)) and A.Shiv:IsInRange(unitID) and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0) and not isVanished then
 				return A.RollTheBones:Show(icon)
             end 
             --AoE (bladeflurry is also in CD(), this is to ensure correct prioitizaion for Burst on and off. The intent is for useAoE to control bladeflurry, not isBurst.
@@ -598,7 +647,7 @@ local function Interrupts()
                 return A.SinisterStrike:Show(icon)
             end
             --InCombat Ranged GCD filler
-            if A.PistolShot:IsReady(unitID) and Player:Energy() >=90 and Unit(unitID):HealthPercent() < 100 and not inMelee  then
+            if A.PistolShot:IsReady(unitID) and Player:Energy() >=90 and Unit(unitID):HealthPercent() < 100 and not A.Shiv:IsInRange(unitID)  then
                 return A.PistolShot:Show(icon)
             end
         end
