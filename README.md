@@ -6,6 +6,7 @@ Use this macro to toggle burst off and on, **I don't recommend using Auto ever**
 ```/run Action.ToggleBurst('Everything','off')```
 
 **[Ryan] Profile UI**
+
 Vanish & Ambush Dropdown
 
 Mouse over totem and explosives targeting
@@ -21,6 +22,7 @@ New Interrupt Logic with 2 modes (Ryan’s Interrupt List or Action Default Inte
 2.    Ryan’s Interrupts Unchecked: Use the Default Action Interrupts tab’s lists and settings. 
 
 **[Ryan] Outlaw Rotation**
+
 Auto Defensives (from Zak)
 
 All Covenants Working
