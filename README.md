@@ -13,7 +13,9 @@ Toggle for Blade Flurry and OOC Stealth
 Blade Rush Max Range (Melee or 20 yards)
 Tricks toggle for usage with pull timers at 2.5 seconds (recommend @focus tricks macro)
 New Interrupt Logic with 2 modes (Ryan’s Interrupt List or Action Default Interrupts) selected by using the “Use Ryan’s Interrupt” Checkbox:
-         1.    Ryan’s Interrupts Checked: Uses my included list of interrupts only. **Please provide feedback if you find something missing or wrong on this list.**
+
+        1.    Ryan’s Interrupts Checked: Uses my included list of interrupts only. **Please provide feedback if you find something missing or wrong on this list.**
+         
         2.    Ryan’s Interrupts Unchecked: Use the Default Action Interrupts tab’s lists and settings. 
 
 [Ryan] Outlaw Rotation
