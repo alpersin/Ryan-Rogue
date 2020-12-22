@@ -4,18 +4,18 @@ local TMW                                             = _G.TMW
 
 local A                                             = _G.Action
 
-local CONST                                            = A.Const
+local CONST                                         = A.Const
 local toNum                                         = A.toNum
-local Print                                            = A.Print
-local GetSpellInfo                                    = A.GetSpellInfo
-local GetToggle                                        = A.GetToggle
+local Print                                         = A.Print
+local GetSpellInfo                                  = A.GetSpellInfo
+local GetToggle                                     = A.GetToggle
 local GetLatency                                    = A.GetLatency
-local InterruptIsValid                                = A.InterruptIsValid
-local Unit                                            = A.Unit 
+local InterruptIsValid                              = A.InterruptIsValid
+local Unit                                          = A.Unit 
 
-local ACTION_CONST_ROGUE_SUBTLETY                        = CONST.ROGUE_SUBTLETY
-local ACTION_CONST_ROGUE_ASSASSINATION             = CONST.ROGUE_ASSASSINATION
-local ACTION_CONST_ROGUE_OUTLAW                        = CONST.ROGUE_OUTLAW
+local ACTION_CONST_ROGUE_SUBTLETY                   = CONST.ROGUE_SUBTLETY
+local ACTION_CONST_ROGUE_ASSASSINATION             	= CONST.ROGUE_ASSASSINATION
+local ACTION_CONST_ROGUE_OUTLAW                     = CONST.ROGUE_OUTLAW
 
 local S                                                = {
     FireElemental                                        	= (GetSpellInfo(198067)),
@@ -32,7 +32,7 @@ local S                                                = {
     SlowTotem                                        		= (GetSpellInfo(2484)),
     AstralShift                                        		= (GetSpellInfo(108271)),
     Stormkeeper                                        		= (GetSpellInfo(191634)), 
-    FEINT                                                  = (GetSpellInfo(1966)),
+    FEINT                                                   = (GetSpellInfo(1966)),
 }
 
 local L                                             = {}
@@ -159,7 +159,7 @@ local SliderMarginOptions = { margin = { top = 10 } }
 local LayoutConfigOptions = { gutter = 6, padding = { left = 5, right = 5 } }
 A.Data.ProfileEnabled[A.CurrentProfile]             = true
 A.Data.ProfileUI                                     = {    
-    DateTime = "v3.3 (16.12.2020) #Racial Perfection",
+    DateTime = "v3.4 (16.12.2020) #Inscrutable Quantum",
     [2] = {
         [ACTION_CONST_ROGUE_SUBTLETY] = {                  },
         

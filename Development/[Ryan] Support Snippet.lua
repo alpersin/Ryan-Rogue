@@ -82,7 +82,8 @@ Factory[4].RyanInterrupts = StdUi:tGenerateMinMax({
             [334748] = { useKick = true, useCC = true, useRacial = true     }, --Drain Fluids;              Kick+CC
             [323190] = { useKick = true, useCC = true, useRacial = true     }, --meat shield;               Kick+CC			
             [335143] = { useKick = false, useCC = false, useRacial = false	}, --Bonemend;				 	Block		Does Damage if shield is broken, dont stop cast	
-            [327130] = { useKick = true, useCC = false, useRacial = false   }, --Repair Flesh;              Kick 
+            [327130] = { useKick = true, useCC = false, useRacial = false   }, --Repair Flesh;              Kick
+            [320822] = { useKick = false, useCC = true, useRacial = true    }, --Final Bargain;           CC			
             --Plaguefall
             [328177] = { useKick = false, useCC = true, useRacial = true    }, --Fungistorm;                CC            
             [330403] = { useKick = false, useCC = false, useRacial = false  }, --Wing Buffet;             	Block           
@@ -111,6 +112,8 @@ Factory[4].RyanInterrupts = StdUi:tGenerateMinMax({
             [328295] = { useKick = true, useCC = true, useRacial = true     }, --Greater Mending;           Kick+CC
             [328137] = { useKick = true, useCC = false, useRacial = false   }, --Dark Pulse;                Kick
             [328331] = { useKick = true, useCC = false, useRacial = false   }, --Forced Confession;         Kick
+			[317661] = { useKick = true, useCC = false, useRacial = false   }, --Insidious Venom;         	Kick
+            [323804] = { useKick = false, useCC = true, useRacial = true    }, 	--Dark Seeker;             CC			
             --Theater of Pain
             [341902] = { useKick = true, useCC = false, useRacial = false   }, --Unholy Fervor;         	Kick            
             [341969] = { useKick = true, useCC = true, useRacial = true     }, --Withering Discharge		Kick+CC
