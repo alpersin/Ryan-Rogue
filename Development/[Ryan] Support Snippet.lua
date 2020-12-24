@@ -57,8 +57,8 @@ Factory[4].RyanInterrupts = StdUi:tGenerateMinMax({
             [325700] = { useKick = true, useCC = false, useRacial = false   }, --Collect Sins;              Kick
             [325701] = { useKick = true, useCC = true, useRacial = true     }, --Siphon Life;               Kick+CC
             [326607] = { useKick = true, useCC = false, useRacial = false   }, --Turn to Stone;             Kick
-            [323552] = { useKick = true, useCC = false, useRacial = false    }, --Volley of Power; Kick			
-            [323538] = { useKick = true, useCC = false, useRacial = false    }, --Bolt of Power; Kick			
+            [323552] = { useKick = true, useCC = false, useRacial = false   }, --Volley of Power;			Kick			
+            [323538] = { useKick = true, useCC = false, useRacial = false   }, --Bolt of Power; 			Kick			
             -- Mists of Tirna Scithe
             [322938] = { useKick = true, useCC = false, useRacial = false   }, --Harvest Essence;           Kick
             [322486] = { useKick = false, useCC = true, useRacial = true    }, --Overgrowth;                CC
@@ -72,7 +72,7 @@ Factory[4].RyanInterrupts = StdUi:tGenerateMinMax({
             [326021] = { useKick = false, useCC = true, useRacial = true    }, --Acid Globule;              CC			
             [331718] = { useKick = false, useCC = true, useRacial = true    }, --Spear Flurry;              CC					
             [331743] = { useKick = false, useCC = true, useRacial = true    }, --Bucking Rampage;           CC	
-            [322450] = { useKick = true, useCC = false, useRacial = false   }, --Consumption;      Kick
+            [322450] = { useKick = true, useCC = false, useRacial = false   }, --Consumption;      			Kick
             -- Necrotic Wake
             [334748] = { useKick = true, useCC = true, useRacial = true     }, --Drain Fluids;              Kick+CC
             [320462] = { useKick = true, useCC = false, useRacial = false   }, --Necrotic Bolt;             Kick            
@@ -81,13 +81,13 @@ Factory[4].RyanInterrupts = StdUi:tGenerateMinMax({
             [338353] = { useKick = true, useCC = true, useRacial = true     }, --Goresplatter;              Kick+CC
             [334748] = { useKick = true, useCC = true, useRacial = true     }, --Drain Fluids;              Kick+CC
             [323190] = { useKick = true, useCC = true, useRacial = true     }, --meat shield;               Kick+CC			
-            [335143] = { useKick = false, useCC = false, useRacial = false	}, --Bonemend;				 	Block		Does Damage if shield is broken, dont stop cast	
+            [335143] = { useKick = true, useCC = true, useRacial = true		}, --Bonemend;				    Kick+CC
             [327130] = { useKick = true, useCC = false, useRacial = false   }, --Repair Flesh;              Kick
-            [320822] = { useKick = false, useCC = true, useRacial = true    }, --Final Bargain;           CC			
+            [320822] = { useKick = false, useCC = true, useRacial = true    }, --Final Bargain;             CC			
             --Plaguefall
             [328177] = { useKick = false, useCC = true, useRacial = true    }, --Fungistorm;                CC            
             [330403] = { useKick = false, useCC = false, useRacial = false  }, --Wing Buffet;             	Block           
-            [318949] = { useKick = false, useCC = true, useRacial = true    }, --Festering Belch;           CC            
+            [318949] = { useKick = false, useCC = false, useRacial = false  }, --Festering Belch;           Block            
             [319070] = { useKick = true, useCC = false, useRacial = false   }, --Corrosive Gunk;            Kick            
             [336451] = { useKick = false, useCC = true, useRacial = true    }, --Bulwark of Maldraxxus;     CC            
             [328400] = { useKick = false, useCC = true, useRacial = true    }, 	--Stealthlings;             CC 
@@ -99,12 +99,12 @@ Factory[4].RyanInterrupts = StdUi:tGenerateMinMax({
             [319654] = { useKick = true, useCC = false, useRacial = false   }, --Hungering Drain;           Kick
             [322433] = { useKick = true, useCC = false, useRacial = false   }, --Stoneskin;                 Kick
             [321038] = { useKick = true, useCC = false, useRacial = false   }, --Wrack Soul;                Kick 
-            [334653] = { useKick = true, useCC = false, useRacial = false    }, --Engorge; Kick
-            [335305] = { useKick = true, useCC = false, useRacial = false    }, --Barbed Shackles; Kick
-            [336277] = { useKick = true, useCC = false, useRacial = false    }, --Explosive Anger; Kick			
-            [326952] = { useKick = true, useCC = false, useRacial = false    }, --Fiery Cantrip Kick
-            [324609] = { useKick = false, useCC = true, useRacial = true    }, --Animate Weapon; CC
-			[326836] = { useKick = true, useCC = true, useRacial = true    }, --Curse of Suppression Kick+CC
+            [334653] = { useKick = true, useCC = false, useRacial = false   }, --Engorge; 					Kick
+            [335305] = { useKick = true, useCC = false, useRacial = false   }, --Barbed Shackles; 			Kick
+            [336277] = { useKick = true, useCC = false, useRacial = false   }, --Explosive Anger; 			Kick			
+            [326952] = { useKick = true, useCC = false, useRacial = false   }, --Fiery Cantrip 				Kick
+            [324609] = { useKick = false, useCC = true, useRacial = true    }, --Animate Weapon; 			CC
+			[326836] = { useKick = true, useCC = true, useRacial = true     }, --Curse of Suppression 		Kick+CC
             --Spires of Ascension
             [327413] = { useKick = true, useCC = false, useRacial = false   }, --Rebellious Fist;           Kick            
             [317936] = { useKick = true, useCC = false, useRacial = false   }, --Forsworn Doctrine;         Kick            
@@ -113,7 +113,7 @@ Factory[4].RyanInterrupts = StdUi:tGenerateMinMax({
             [328137] = { useKick = true, useCC = false, useRacial = false   }, --Dark Pulse;                Kick
             [328331] = { useKick = true, useCC = false, useRacial = false   }, --Forced Confession;         Kick
 			[317661] = { useKick = true, useCC = false, useRacial = false   }, --Insidious Venom;         	Kick
-            [323804] = { useKick = false, useCC = true, useRacial = true    }, 	--Dark Seeker;             CC			
+            [323804] = { useKick = false, useCC = true, useRacial = true    }, 	--Dark Seeker;             	CC			
             --Theater of Pain
             [341902] = { useKick = true, useCC = false, useRacial = false   }, --Unholy Fervor;         	Kick            
             [341969] = { useKick = true, useCC = true, useRacial = true     }, --Withering Discharge		Kick+CC

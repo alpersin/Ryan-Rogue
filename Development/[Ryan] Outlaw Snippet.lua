@@ -57,7 +57,9 @@ Action[ACTION_CONST_ROGUE_OUTLAW] = {
     EscapeArtist                    = Create({ Type = "Spell", ID = 20589}), -- usable in Action Core 
     EveryManforHimself                = Create({ Type = "Spell", ID = 59752}), -- usable in Action Core  
     Regeneratin                        = Create({ Type = "Spell", ID = 291944}), -- not usable in APL but user can Queue it
-    -- general
+    --Talents
+	QuickDraw                            = Create({ Type = "Spell", ID = 196938}),
+	-- general
     Stealth                            = Create({ Type = "Spell", ID = 1784}),
     InstantPoison                    = Create({ Type = "Spell", ID = 315584}),
     CripplingPoison                    = Create({ Type = "Spell", ID = 3408}),
@@ -97,7 +99,8 @@ Action[ACTION_CONST_ROGUE_OUTLAW] = {
     VanishStealth                    = Create({ Type = "Spell", ID = 11327,Hidden = true}),
     SepsisStealth                    = Create({ Type = "Spell", ID = 347037,Hidden = true}),
     Elusiveness                        = Create({ Type = "Spell", ID = 79008}),
-    EchoingReprimandBuff            = Create({ Type = "Spell", ID = 323558,Hidden = true}),        
+    EchoingReprimandBuff            = Create({ Type = "Spell", ID = 323558,Hidden = true}),
+	MasterAssassinsMark				= Create({ Type = "Spell", ID = 340094,Hidden = true}),
     --kick
     Kick                            = Create({ Type = "Spell", ID = 1766}),
     KickGreen                        = Create({ Type = "SpellSingleColor",ID = 1766,Hidden = true,Color = "GREEN",QueueForbidden = true}),
@@ -310,10 +313,7 @@ end
 A[3] = function(icon) 
     --local inDisarm          = LoC:Get("DISARM") > 0                              -- @boolean  --not used by Ryan
     --Testing
-    
-    
-    
-    
+
     -- Rotations 
     function EnemyRotation(unitID)  
         if not IsUnitEnemy(unitID) then return end
@@ -325,8 +325,6 @@ A[3] = function(icon)
         local isBurst = BurstIsON(unitID)                            -- @boolean
         
         --testing
-        
-        
         
         
         --Stealth with target enemy
@@ -344,7 +342,11 @@ A[3] = function(icon)
         if A.Shiv:IsReady(unitID) and Unit(player):HasBuffs(A.NumbingPoison.ID) ~= 0 and Action.AuraIsValid(unitID, "UseExpelEnrage", "Enrage") then
             return A.Shiv:Show(icon)
         end 
-        -- Purge
+       --Slow Spiteful Shades
+		if Unit(unitID):Name() == "Spiteful Shade" and Unit(unitID):HasDeBuffs(A.PistolShot.ID) == 0 and A.PistolShot:IsReady(unitID)  then
+		    return A.PistolShot:Show(icon)
+        end		
+	   -- Purge
         if A.ArcaneTorrent:AutoRacial(unitID) then 
             return A.ArcaneTorrent:Show(icon)
         end             
@@ -607,7 +609,7 @@ A[3] = function(icon)
                 return A.BladeRush:Show(icon)
             end
             -- Use Vanish if setting is set to Auto
-            if A.Vanish:IsReady(player) and GetToggle(2, "VanishSetting") == 2 and A.Shiv:IsInRange(unitID) and Unit(player):CombatTime() > 0 and Player:ComboPointsDeficit() >= 2 and Unit(player):HasBuffs(A.SkullandCrossbones.ID) == 0 then
+            if A.Vanish:IsReady(player) and GetToggle(2, "VanishSetting") == 2 and A.Shiv:IsInRange(unitID) and Unit(player):CombatTime() > 0 and Player:ComboPointsDeficit() >= 2 and Unit(player):HasBuffs(A.SkullandCrossbones.ID) == 0 and Unit(player):HasBuffs(A.MasterAssassinsMark) == 0 and Player:GCDRemains()<0.2 then
                 if Player:Energy() <= 51 then 
                     return A.PoolResource:Show(icon)
                 else
@@ -650,13 +652,14 @@ A[3] = function(icon)
             if A.BladeFlurry:IsReady(unitID, true) and GetToggle(2, "AoE") and MultiUnits:GetByRange(8) >= 2 and GetByRangeTTD(MultiUnits:GetByRange(8),8) > 4 and Unit(player):HasBuffs(A.BladeFlurry.ID) <= 2 and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0) then
                 return A.BladeFlurry:Show(icon)
             end
-            --MfD is a CD that resets if the target dies, no need to hold based on Burst setting
+            --MfD is a CD that resets if the target dies, no need to hold based on Burst setting, Can not be used on Totems
             if A.MarkedForDeath:IsReady(unitID) and not isBurst and Player:ComboPointsDeficit() >=4 and(not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0) and not Unit(unitID):IsTotem()
             then
                 return A.MarkedForDeath:Show(icon)
             end
-            --Covenant Builders    
-            if Unit(player):HasBuffs(A.SepsisStealth.ID) ~= 0 and A.Ambush:IsInRange(unitID) then
+            --Covenant Builders
+			--Use Spesis Stealth buff on Ambush, Pool energy for Ambush
+            if Unit(player):HasBuffs(A.SepsisStealth.ID) ~= 0 and A.Ambush:IsInRange(unitID) and Player:ComboPointsDeficit() >= 1 then
                 if A.Ambush:IsReady(unitID) then
                     return A.Ambush:Show(icon)  
                 end
@@ -668,8 +671,19 @@ A[3] = function(icon)
             --Builders
             -- there are rumors that Triple Threat Conduit may make PistolShot with Opportunity obselete, this will check if that conduit is active if needed
             -- in the future (C_Soulbinds.IsConduitInstalledInSoulbind(C_Soulbinds.GetActiveSoulbindID(), 241)) --@boolean 
-            if (A.PistolShot:IsReady(unitID, true) and Unit(player):HasBuffs(A.Opportunity.ID) ~= 0) and ((Unit(player):HasBuffs(A.Broadside.ID) >= 1 and Player:ComboPointsDeficit() >= 3) or (Unit(player):HasBuffs(A.Broadside.ID) == 0 and Player:ComboPointsDeficit() >= 2))then
+            -- if QuickDraw Talent (Opportunity generates 2 CP)
+			if (A.PistolShot:IsReady(unitID, true) and Unit(player):HasBuffs(A.Opportunity.ID) ~= 0) and A.QuickDraw:IsTalentLearned() and 
+			((Unit(player):HasBuffs(A.Broadside.ID) >= 1 and Player:ComboPointsDeficit() >= 3)  --QD +OP + BS = 3 CP
+			or (Unit(player):HasBuffs(A.Broadside.ID) == 0  and Player:ComboPointsDeficit() >= 2)) --QD + BS = 2 CP
+			then
                 return A.PistolShot:Show(icon)
+			end	
+			-- If not QuickDraw Talent (Opportunity generates 1 CP)
+			if (A.PistolShot:IsReady(unitID, true) and Unit(player):HasBuffs(A.Opportunity.ID) ~= 0) and not A.QuickDraw:IsTalentLearned() and 
+			((Unit(player):HasBuffs(A.Broadside.ID) >= 1 and Player:ComboPointsDeficit() >= 2)  --OP + BS = 2 CP
+			or (Unit(player):HasBuffs(A.Broadside.ID) == 0  and Player:ComboPointsDeficit() >= 1)) --OP = 1 CP
+			then
+                return A.PistolShot:Show(icon)				
             end
             if A.SinisterStrike:IsReady(unitID) then
                 return A.SinisterStrike:Show(icon)
