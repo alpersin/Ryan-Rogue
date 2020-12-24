@@ -33,6 +33,7 @@ local S                                                = {
     AstralShift                                        		= (GetSpellInfo(108271)),
     Stormkeeper                                        		= (GetSpellInfo(191634)), 
     FEINT                                                   = (GetSpellInfo(1966)),
+	AR                                                   	= (GetSpellInfo(13750)),
 }
 
 local L                                             = {}
@@ -127,6 +128,10 @@ L.FEINT                                    = {
     enUS = S.FEINT .. "\nHealth Percent (Self)",
     ruRU = S.FEINT .. "\nЗдоровье Процент (Свое)",
 }
+L.AR                                    = {
+    enUS = S.AR .. "\nMin Targets",
+}
+
 L.HealingTotem = {
     enUS = S.HealingTotem .. "\nHealth Percent (Self)",
     ruRU = S.HealingTotem .. "\nЗдоровье Процент (Свое)",
@@ -289,6 +294,23 @@ A.Data.ProfileUI                                     = {
                     M = {},
                 },				
             },
+			{
+                {                    
+                    E                 = "Slider",                                                     
+                    MIN             = 1, 
+                    MAX                 = 10,                            
+                    DB                 = "Adrenaline",
+                    DBV             = 1,
+                    ONOFF             = false,
+                    L                 = L.AR,
+                    M                 = {},
+					TT				={ 
+                        ANY = "Number of Non-Boss units to use Adernanline Rush on\n\nRight click: Create macro",  
+                    }, 
+                },
+				{},	
+			},
+			
             { -- [2] Poisons 
                 {
                     E                 = "Header",

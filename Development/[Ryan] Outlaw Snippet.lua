@@ -584,7 +584,12 @@ A[3] = function(icon)
             if (A.Flagellation:IsReady(unitID) and Unit(unitID):HasDeBuffs(A.Flagellation.ID) == 0 and (EightYardTTD > 4 or Unit(unitID):IsBoss())) or (Unit(unitID):HasDeBuffs(A.Flagellation.ID) > 0 and Unit(unitID):HasDeBuffs(A.Flagellation.ID) <= 2 or Unit(unitID):HasDeBuffsStacks(A.Flagellation.ID) >= 30) then
                 return A.Flagellation:Show(icon)
             end
-            if A.AdrenalineRush:IsReady(unitID, true) and Unit(player):HasBuffs(A.AdrenalineRush.ID) == 0 and A.Shiv:IsInRange(unitID) and (EightYardTTD > 8 or Unit(unitID):IsBoss()) then
+            if A.AdrenalineRush:IsReady(unitID, true) 
+				and Unit(player):HasBuffs(A.AdrenalineRush.ID) == 0 
+				and A.Shiv:IsInRange(unitID) 
+				and (EightYardTTD > 8 or Unit(unitID):IsBoss()) 
+				and (GetToggle(2, "Adrenaline") <= MultiUnits:GetByRange(8) or Unit(unitID):IsBoss())
+				then
                 return A.AdrenalineRush:Show(icon)
             end
             --RtB is not a cooldown, it is here to ensure correct prioirty with Burst on
