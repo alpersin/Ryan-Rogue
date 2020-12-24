@@ -1,21 +1,62 @@
 TellMeWhenDB = {
 	["global"] = {
 		["TextLayouts"] = {
-			["icon1"] = {
+			["bar2"] = {
 				{
 				}, -- [1]
 				{
 				}, -- [2]
 			},
-			["TMW:textlayout:1Vp0Xmmoq2CE"] = {
+			["TMW:textlayout:1TMvg5InaYOw"] = {
+				{
+					["Anchors"] = {
+						{
+							["y"] = -1.5,
+							["x"] = 1.5,
+							["point"] = "TOPLEFT",
+							["relativePoint"] = "TOPLEFT",
+						}, -- [1]
+					},
+					["DefaultText"] = "[ActionBurst]",
+					["Size"] = 6,
+				}, -- [1]
+				{
+					["Anchors"] = {
+						{
+							["y"] = 1,
+							["x"] = 0.5,
+							["point"] = "BOTTOMRIGHT",
+							["relativePoint"] = "BOTTOMRIGHT",
+						}, -- [1]
+					},
+					["Name"] = "Morpheus",
+					["DefaultText"] = "[ActionAoE]",
+					["Size"] = 6,
+				}, -- [2]
+				{
+					["Anchors"] = {
+						{
+							["y"] = 1,
+							["x"] = 1.5,
+							["point"] = "BOTTOMLEFT",
+							["relativePoint"] = "BOTTOMLEFT",
+						}, -- [1]
+					},
+					["Name"] = "Morpheus",
+					["DefaultText"] = "[ActionMode]",
+					["Size"] = 6,
+				}, -- [3]
+				["GUID"] = "TMW:textlayout:1TMvg5InaYOw",
+				["Name"] = "ActionLayout",
+				["n"] = 3,
+			},
+			["TMW:textlayout:1RkGJEN4L5o_"] = {
 				{
 					["SkinAs"] = "HotKey",
-					["StringName"] = "Binding/Label",
-					["Height"] = 5,
 					["Anchors"] = {
 						{
 							["y"] = -2,
-							["x"] = -8,
+							["x"] = -2,
 							["point"] = "TOPLEFT",
 							["relativePoint"] = "TOPLEFT",
 						}, -- [1]
@@ -27,36 +68,90 @@ TellMeWhenDB = {
 						}, -- [2]
 						["n"] = 2,
 					},
-					["Size"] = 6,
+					["StringName"] = "Привязка/Ярлык",
+					["Height"] = 1,
 				}, -- [1]
 				{
+					["SkinAs"] = "Count",
 					["Anchors"] = {
 						{
 							["y"] = 2,
-							["x"] = -2,
-							["point"] = "BOTTOMRIGHT",
-							["relativePoint"] = "BOTTOMRIGHT",
+							["x"] = 50.7,
+							["point"] = "RIGHT",
+							["relativePoint"] = "RIGHT",
 						}, -- [1]
 					},
+					["StringName"] = "Стаки",
 					["DefaultText"] = "[Stacks:Hide(0)]",
-					["StringName"] = "Stacks",
-					["SkinAs"] = "Count",
-					["Size"] = 6,
 				}, -- [2]
-				["GUID"] = "TMW:textlayout:1Vp0Xmmoq2CE",
-				["Name"] = "Ryan Layout",
+				["GUID"] = "TMW:textlayout:1RkGJEN4L5o_",
+				["Name"] = "UserInterface_DefaultText_RightSide",
 				["n"] = 2,
 			},
-			["bar2"] = {
+			["icon1"] = {
 				{
 				}, -- [1]
 				{
 				}, -- [2]
+			},
+			["TMW:textlayout:1RFt2HZe_Cbk"] = {
+				{
+					["Outline"] = "OUTLINE",
+					["Shadow"] = 0.9,
+					["Anchors"] = {
+						{
+							["point"] = "BOTTOM",
+							["relativePoint"] = "BOTTOM",
+						}, -- [1]
+					},
+					["Size"] = 8,
+				}, -- [1]
+				["GUID"] = "TMW:textlayout:1RFt2HZe_Cbk",
+				["Name"] = "UserInterface_Text",
+			},
+			["TMW:textlayout:1S6ieoFev4r0"] = {
+				{
+					["Outline"] = "OUTLINE",
+					["Shadow"] = 0.9,
+					["Anchors"] = {
+						{
+							["y"] = 2,
+							["point"] = "BOTTOM",
+							["relativePoint"] = "BOTTOM",
+						}, -- [1]
+					},
+					["Name"] = "AR ZhongkaiGBK Medium",
+					["Size"] = 6,
+				}, -- [1]
+				["GUID"] = "TMW:textlayout:1S6ieoFev4r0",
+				["Name"] = "UserInterface_SmallerText",
+			},
+			["TMW:textlayout:1Rh4g1a9S6Uf"] = {
+				{
+					["Outline"] = "OUTLINE",
+					["Shadow"] = 0.9,
+					["Anchors"] = {
+						{
+							["y"] = 58,
+							["x"] = 12.2,
+							["relativePoint"] = "RIGHT",
+							["relativeTo"] = "IconModule_CooldownSweepCooldown",
+						}, -- [1]
+					},
+					["Name"] = "Morpheus",
+					["Rotate"] = 90,
+					["Size"] = 35,
+				}, -- [1]
+				["GUID"] = "TMW:textlayout:1Rh4g1a9S6Uf",
+				["Name"] = "UserInterface_TextVertical",
 			},
 		},
 		["CreateImportBackup"] = false,
 		["Interval"] = 0,
 		["AllowCombatConfig"] = true,
+		["HelpSettings"] = {
+			["SUG_FIRSTHELP"] = true,
+		},
 		["ReceiveComm"] = false,
 		["VersionWarning"] = false,
 		["BackupDbInOptions"] = false,
@@ -64,7 +159,7 @@ TellMeWhenDB = {
 	["Version"] = 90301,
 	["profiles"] = {
 		["[Ryan] Rogue"] = {
-			["Version"] = 90301,
+			["ForceNoBlizzCC"] = true,
 			["NumGroups"] = 4,
 			["TextureName"] = "Flat",
 			["CodeSnippets"] = {
@@ -82,9 +177,15 @@ TellMeWhenDB = {
 				}, -- [3]
 				["n"] = 3,
 			},
+			["Version"] = 90301,
 			["Groups"] = {
 				{
-					["TimerBar_MiddleColor"] = "ff000000",
+					["Point"] = {
+						["y"] = 12,
+						["x"] = -29,
+						["point"] = "TOPLEFT",
+						["relativePoint"] = "TOPLEFT",
+					},
 					["Scale"] = 0.600000023841858,
 					["TimerBar_CompleteColor"] = "ff000000",
 					["TimerBar_StartColor"] = "ff000000",
@@ -1568,15 +1669,15 @@ TellMeWhenDB = {
 					},
 					["Name"] = "Shown Main",
 					["GUID"] = "TMW:group:1Rhh0xLqd4g8",
+					["TimerBar_MiddleColor"] = "ff000000",
+				}, -- [1]
+				{
 					["Point"] = {
-						["y"] = 12,
-						["x"] = -29,
+						["y"] = 50,
+						["x"] = -29.0000038146973,
 						["point"] = "TOPLEFT",
 						["relativePoint"] = "TOPLEFT",
 					},
-				}, -- [1]
-				{
-					["TimerBar_MiddleColor"] = "ff000000",
 					["Scale"] = 0.600000023841858,
 					["TimerBar_CompleteColor"] = "ff000000",
 					["TimerBar_StartColor"] = "ff000000",
@@ -3162,14 +3263,14 @@ TellMeWhenDB = {
 					},
 					["Name"] = "Hidden APL",
 					["GUID"] = "TMW:group:1T0KXe2TsCkW",
-					["Point"] = {
-						["y"] = 50,
-						["x"] = -29.0000038146973,
-						["point"] = "TOPLEFT",
-						["relativePoint"] = "TOPLEFT",
-					},
+					["TimerBar_MiddleColor"] = "ff000000",
 				}, -- [2]
 				{
+					["Point"] = {
+						["y"] = -3.0517578125e-05,
+						["x"] = -0.000244140625,
+						["relativeTo"] = "TMW:group:1TMvhh5X05mC",
+					},
 					["Scale"] = 2.5,
 					["Locked"] = true,
 					["Columns"] = 1,
@@ -3265,11 +3366,6 @@ TellMeWhenDB = {
 						["n"] = 1,
 					},
 					["GUID"] = "TMW:group:1P3cu8AAtSYM",
-					["Point"] = {
-						["y"] = -3.0517578125e-05,
-						["relativeTo"] = "TMW:group:1TMvhh5X05mC",
-						["x"] = -0.000244140625,
-					},
 				}, -- [3]
 				{
 					["Point"] = {
@@ -3302,9 +3398,9 @@ TellMeWhenDB = {
 							},
 							["SettingsPerView"] = {
 								["icon"] = {
-									["TextLayout"] = "TMW:textlayout:1Vp0Xmmoq2CE",
+									["TextLayout"] = "TMW:textlayout:1TMvg5InaYOw",
 									["Texts"] = {
-										"   [ActionBurst]", -- [1]
+										" [ActionBurst]", -- [1]
 										"[ActionMode]  [ActionModeAoE]", -- [2]
 									},
 								},
@@ -11421,7 +11517,6 @@ TellMeWhenDB = {
 					},
 				}, -- [10]
 			},
-			["ForceNoBlizzCC"] = true,
 			["Locked"] = true,
 			["WarnInvalids"] = false,
 		},
