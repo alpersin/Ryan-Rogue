@@ -342,10 +342,24 @@ A[3] = function(icon)
         if A.Shiv:IsReady(unitID) and Unit(player):HasBuffs(A.NumbingPoison.ID) ~= 0 and Action.AuraIsValid(unitID, "UseExpelEnrage", "Enrage") then
             return A.Shiv:Show(icon)
         end 
-       --Slow Spiteful Shades
-		if Unit(unitID):Name() == "Spiteful Shade" and Unit(unitID):HasDeBuffs(A.PistolShot.ID) == 0 and A.PistolShot:IsReady(unitID)  then
-		    return A.PistolShot:Show(icon)
-        end		
+		--Spiteful Shade
+		if Unit(unitID):Name() == "Spiteful Shade" and Unit(unitID):HasDeBuffs({"Stuned", "Disoriented", "PhysStuned"}) == 0 then
+			--Stun
+			if Unit("targettarget"):Name() == Unit(player):Name() and Player:ComboPoints() >= 3 and A.KidneyShot:IsReady(unitID) and  Unit(unitID):GetDR("stun") > 0 and Unit(player):HasBuffs(A.Evasion.ID) ~= 0 then
+				return A.KidneyShot:Show(icon)   
+			end
+			--Evasion tank
+			if Unit("targettarget"):Name() == Unit(player):Name() and A.Shiv:IsInRange(unitID) and A.Evasion:IsReady(player) then
+				return A.Evasion:Show(icon)
+			end
+			--Slow 
+			if Unit(unitID):HasDeBuffs(A.PistolShot.ID) == 0 and A.PistolShot:IsReady(unitID) and not A.Shiv:IsInRange(unitID) then
+				return A.PistolShot:Show(icon)
+			end
+
+		end
+		
+
 	   -- Purge
         if A.ArcaneTorrent:AutoRacial(unitID) then 
             return A.ArcaneTorrent:Show(icon)
@@ -610,11 +624,11 @@ A[3] = function(icon)
             if A.KillingSpree:IsReady(unitID) and Player:EnergyTimeToMax() >= 2.5 and ((MultiUnits:GetByRange(8) >= 2 and Unit(player):HasBuffs(A.BladeFlurry.ID) ~= 0) or MultiUnits:GetByRange(8) <= 1) then
                 return A.KillingSpree:Show(icon)
             end
-            if A.BladeRush:IsReady(unitID) and (MultiUnits:GetByRange(8) <= 1 or (MultiUnits:GetByRange(8) >= 2 and Unit(player):HasBuffs(A.BladeFlurry.ID) ~= 0)) and ((GetToggle(2, "BladeRushRange") <= 6 and A.Shiv:IsInRange(unitID)) or (GetToggle(2, "BladeRushRange") >= 6))then
+            if A.BladeRush:IsReady(unitID) and Unit(unitID):Name() ~= "Spiteful Shade" and (MultiUnits:GetByRange(8) <= 1 or (MultiUnits:GetByRange(8) >= 2 and Unit(player):HasBuffs(A.BladeFlurry.ID) ~= 0)) and ((GetToggle(2, "BladeRushRange") <= 6 and A.Shiv:IsInRange(unitID)) or (GetToggle(2, "BladeRushRange") >= 6))then
                 return A.BladeRush:Show(icon)
             end
             -- Use Vanish if setting is set to Auto
-            if A.Vanish:IsReady(player) and GetToggle(2, "VanishSetting") == 2 and A.Shiv:IsInRange(unitID) and Unit(player):CombatTime() > 0 and Player:ComboPointsDeficit() >= 2 and Unit(player):HasBuffs(A.SkullandCrossbones.ID) == 0 and Unit(player):HasBuffs(A.MasterAssassinsMark) == 0 and Player:GCDRemains()<0.2 then
+            if A.Vanish:IsReady(player) and GetToggle(2, "VanishSetting") == 2 and A.Shiv:IsInRange(unitID) and Unit(player):CombatTime() > 0 and Player:ComboPointsDeficit() >= 2 and Unit(player):HasBuffs(A.SkullandCrossbones.ID) == 0 and Unit(player):HasBuffs(A.MasterAssassinsMark) == 0 and Player:GCDRemains() <= 0.2 then
                 if Player:Energy() <= 51 then 
                     return A.PoolResource:Show(icon)
                 else
@@ -636,7 +650,7 @@ A[3] = function(icon)
         
         -- [[ finishers ]]
         local function Finishers() 
-            if (A.SliceAndDice:IsReady(unitID, true) and Unit(player):HasBuffs(A.SliceAndDice.ID) < (1 + (Player:ComboPoints()) * 1.8  ) and Unit(player):HasBuffs(A.VanishStealth.ID) == 0) and ((Player:ComboPointsDeficit() == 0) or (Unit(player):HasBuffs(A.Broadside.ID) >= 1 and (Player:ComboPointsDeficit() <= 1))) then
+            if (A.SliceAndDice:IsReady(unitID, true) and Unit(player):HasBuffs(A.SliceAndDice.ID) < (1 + (Player:ComboPoints()) * 1.8  ) and Unit(player):HasBuffs(A.MasterAssassinsMark) == 0 and Unit(player):HasBuffs(A.VanishStealth.ID) == 0) and ((Player:ComboPointsDeficit() == 0) or (Unit(player):HasBuffs(A.Broadside.ID) >= 1 and (Player:ComboPointsDeficit() <= 1))) then
                 return A.SliceAndDice:Show(icon)
             end
             if A.BetweenTheEyes:IsReady(unitID) and ((Player:ComboPointsDeficit() == 0 or (Player:ComboPoints()) == Unit(player):HasBuffsStacks(A.EchoingReprimandBuff.ID)) or (Unit(player):HasBuffs(A.Broadside.ID) >= 1 and (Player:ComboPointsDeficit() <= 1))) then

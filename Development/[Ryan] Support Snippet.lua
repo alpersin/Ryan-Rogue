@@ -58,7 +58,8 @@ Factory[4].RyanInterrupts = StdUi:tGenerateMinMax({
             [325701] = { useKick = true, useCC = true, useRacial = true     }, --Siphon Life;               Kick+CC
             [326607] = { useKick = true, useCC = false, useRacial = false   }, --Turn to Stone;             Kick
             [323552] = { useKick = true, useCC = false, useRacial = false   }, --Volley of Power;			Kick			
-            [323538] = { useKick = true, useCC = false, useRacial = false   }, --Bolt of Power; 			Kick			
+            [323538] = { useKick = true, useCC = false, useRacial = false   }, --Bolt of Power; 			Kick
+            [301680] = { useKick = false, useCC = true, useRacial = true    }, --Rapid Fire;             CC			
             -- Mists of Tirna Scithe
             [322938] = { useKick = true, useCC = false, useRacial = false   }, --Harvest Essence;           Kick
             [322486] = { useKick = false, useCC = true, useRacial = true    }, --Overgrowth;                CC
