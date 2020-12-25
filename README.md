@@ -38,6 +38,7 @@ Pre-Pull Boss Mods Support:
     **Will stop the rotation until pull timer is used**
 
 
-Donations accepted here: paypal.me/rtm2017
+**Donations accepted here:** 
+paypal.me/rtm2017
 
 DM me feature requests! I do not accept paid features
