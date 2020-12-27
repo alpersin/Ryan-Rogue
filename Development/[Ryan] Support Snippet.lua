@@ -84,7 +84,8 @@ Factory[4].RyanInterrupts = StdUi:tGenerateMinMax({
             [323190] = { useKick = true, useCC = true, useRacial = true     }, --meat shield;               Kick+CC			
             [335143] = { useKick = true, useCC = true, useRacial = true		}, --Bonemend;				    Kick+CC
             [327130] = { useKick = true, useCC = false, useRacial = false   }, --Repair Flesh;              Kick
-            [320822] = { useKick = false, useCC = true, useRacial = true    }, --Final Bargain;             CC			
+            [320822] = { useKick = false, useCC = true, useRacial = true    }, --Final Bargain;             CC	
+            [327240] = { useKick = false, useCC = true, useRacial = true    }, --Spine Crush;             	CC				
             --Plaguefall
             [328177] = { useKick = false, useCC = true, useRacial = true    }, --Fungistorm;                CC            
             [330403] = { useKick = false, useCC = false, useRacial = false  }, --Wing Buffet;             	Block           
