@@ -22,7 +22,7 @@ All Covenants Working
 AntifakeKick & CC  
 Shiv with numbing poison expel enrages using Action Auras tab (must add enrage IDs in Action)  
 Priority kill Explosives with SS or pistol shot  
-Spiteful Shade Logic (Stun > Evasion > Pistol Shot Slow > Kill)   
+Spiteful Shade Logic (Evasion > Stun > Pistol Shot Slow > Kill)   
 Pre-Pull Boss Mods Support:  
     Uses Action Tab “Boss Timers” checkbox  
     **Will stop the rotation until pull timer is used**  
