@@ -24,7 +24,8 @@ local Player = Action.Player
 local MultiUnits = Action.MultiUnits
 local ActiveUnitPlates = MultiUnits:GetActiveUnitPlates()
 local UnitCooldown = Action.UnitCooldown
-local Unit = Action.Unit 
+local Unit = Action.Unit
+local Covenant = _G.LibStub("Covenant")
 local IsUnitEnemy = Action.IsUnitEnemy
 local IsUnitFriendly = Action.IsUnitFriendly
 local Combat = Action.Combat
@@ -297,6 +298,10 @@ A[3] = function(icon)
 	if Unit(player):HasBuffs(A.StolenShadehound.ID) ~= 0 then return end
 	
     --Testing
+
+	
+	
+	
     -- Rotations 
     function EnemyRotation(unitID) 
         if not IsUnitEnemy(unitID) then return end
@@ -548,7 +553,7 @@ A[3] = function(icon)
             if A.AncestralCall:IsReady(player) and A.Shiv:IsInRange(unitID) and Player:Energy() <44 then 
                 return A.AncestralCall:Show(icon)
             end 
-            if (A.Flagellation:IsReady(unitID) and Unit(unitID):HasDeBuffs(A.Flagellation.ID) == 0 and (EightYardTTD > 4 or Unit(unitID):IsBoss())) or (Unit(unitID):HasDeBuffs(A.Flagellation.ID) > 0 and Unit(unitID):HasDeBuffs(A.Flagellation.ID) <= 2 or Unit(unitID):HasDeBuffsStacks(A.Flagellation.ID) >= 30) then
+            if Covenant.covenantID == 2 and ((A.Flagellation:IsReady(unitID) and Unit(unitID):HasDeBuffs(A.Flagellation.ID) == 0 and (EightYardTTD > 4 or Unit(unitID):IsBoss())) or (Unit(unitID):HasDeBuffs(A.Flagellation.ID) > 0 and Unit(unitID):HasDeBuffs(A.Flagellation.ID) <= 2 or Unit(unitID):HasDeBuffsStacks(A.Flagellation.ID) >= 30)) then
                 return A.Flagellation:Show(icon)
             end
             if A.AdrenalineRush:IsReady(unitID, true) and Unit(player):HasBuffs(A.AdrenalineRush.ID) == 0 and A.Shiv:IsInRange(unitID) and (EightYardTTD > 8 or Unit(unitID):IsBoss()) and (GetToggle(2, "Adrenaline") <= MultiUnits:GetByRange(8) or Unit(unitID):IsBoss()) then
