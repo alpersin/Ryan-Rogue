@@ -197,7 +197,7 @@ A[1] = function(icon)
         -- useCC / useRacial
         if not useKick or notKickAble or A.Kick:GetCooldown() > 0 then 
             if useCC 
-            and (Unit(player):HasBuffs(A.Stealth.ID) ~= 0 or Unit(player):HasBuffs(A.VanishStealth.ID) ~= 0) and A.CheapShot:IsReady("target") and A.CheapShot:AbsentImun("target", Temp.TotalAndPhysAndCC) and Unit("target"):GetDR("stun") > 0 and not Unit("target"):IsBoss() then 
+            and (Player:GetStance() >=1) and A.CheapShot:IsReady("target") and A.CheapShot:AbsentImun("target", Temp.TotalAndPhysAndCC) and Unit("target"):GetDR("stun") > 0 and not Unit("target"):IsBoss() then 
                 return A.CheapShotGreen:Show(icon) 
             end 
             
@@ -314,7 +314,7 @@ A[3] = function(icon)
         if Unit(unitID):IsDead() then return end
         if UnitCanAttack(player, unitID) == false then return end
         --Stop Rotation if Vanish is set to off
-        if Unit(player):HasBuffs(A.VanishStealth.ID) ~= 0 and GetToggle(2, "VanishSetting") == 0 then return end		
+        if Player:GetStance() == 2 and GetToggle(2, "VanishSetting") == 0 then return end		
         if IsMounted() then return end
         local isBurst = BurstIsON(unitID) -- @boolean
         
@@ -322,7 +322,7 @@ A[3] = function(icon)
         
         
         --Stealth with target enemy
-        if IsUnitEnemy(unitID) and A.Stealth:IsReady(unitID, true) and Unit(player):HasBuffs(A.Stealth.ID) == 0 and Unit(player):HasBuffs(A.VanishStealth.ID) == 0 and Unit(player):HasBuffs(A.Soulshape.ID) == 0 and not IsMounted() then
+        if IsUnitEnemy(unitID) and A.Stealth:IsReady(unitID, true) and Player:GetStance() == 0 and Unit(player):HasBuffs(A.Soulshape.ID) == 0 and not IsMounted() then
             return A.Stealth:Show(icon)
         end
         -- kill Explosive Affix
@@ -393,7 +393,7 @@ A[3] = function(icon)
                 end
                 -- useCC / useRacial
                 if not useKick or notKickAble or A.Kick:GetCooldown() > 0 then 
-                    if useCC and (Unit(player):HasBuffs(A.Stealth.ID) ~= 0 or Unit(player):HasBuffs(A.VanishStealth.ID) ~= 0) and A.CheapShot:IsReady(unitID) and A.CheapShot:AbsentImun(unitID, Temp.TotalAndPhysAndCC) and Unit(unitID):GetDR("stun") > 0 and not Unit(unitID):IsBoss() then 
+                    if useCC and (Player:GetStance() ~= 0) and A.CheapShot:IsReady(unitID) and A.CheapShot:AbsentImun(unitID, Temp.TotalAndPhysAndCC) and Unit(unitID):GetDR("stun") > 0 and not Unit(unitID):IsBoss() then 
                         return A.CheapShot:Show(icon) 
                     end 
                     
@@ -612,7 +612,7 @@ A[3] = function(icon)
         
         -- [[ finishers ]]
         local function Finishers() 
-            if (A.SliceAndDice:IsReady(unitID, true) and Unit(player):HasBuffs(A.SliceAndDice.ID) < (1 + (Player:ComboPoints()) * 1.8 ) and Unit(player):HasBuffs(A.MasterAssassinsMark) == 0 and Unit(player):HasBuffs(A.VanishStealth.ID) == 0) and ((Player:ComboPointsDeficit() == 0) or (Unit(player):HasBuffs(A.Broadside.ID) >= 1 and (Player:ComboPointsDeficit() <= 1))) then
+            if (A.SliceAndDice:IsReady(unitID, true) and Unit(player):HasBuffs(A.SliceAndDice.ID) < (1 + (Player:ComboPoints()) * 1.8 ) and Unit(player):HasBuffs(A.MasterAssassinsMark) == 0 and Player:GetStance() <=1 ) and ((Player:ComboPointsDeficit() == 0) or (Unit(player):HasBuffs(A.Broadside.ID) >= 1 and (Player:ComboPointsDeficit() <= 1))) then
                 return A.SliceAndDice:Show(icon)
             end
             if A.BetweenTheEyes:IsReady(unitID) and ((Player:ComboPointsDeficit() == 0 or (Player:ComboPoints()) == Unit(player):HasBuffsStacks(A.EchoingReprimandBuff.ID)) or (Unit(player):HasBuffs(A.Broadside.ID) >= 1 and (Player:ComboPointsDeficit() <= 1))) then
@@ -626,7 +626,7 @@ A[3] = function(icon)
         -- [[ Single Target ]]
         local function ST()
             --RtB is not a cooldown, it is here to ensure use when Burst is off
-            if not isBurst and CheckBuffCountRB() <= 1 and A.RollTheBones:IsReady(unitID, true) and (CheckBuffCountRB() == 0 or (Unit(player):HasBuffs(A.BuriedTreasure.ID) ~= 0 or Unit(player):HasBuffs(A.GrandMelee.ID) ~= 0 or Unit(player):HasBuffs(A.TrueBearing.ID) ~= 0)) and A.Shiv:IsInRange(unitID) and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0) and Unit(player):HasBuffs(A.VanishStealth.ID) == 0 then
+            if not isBurst and CheckBuffCountRB() <= 1 and A.RollTheBones:IsReady(unitID, true) and (CheckBuffCountRB() == 0 or (Unit(player):HasBuffs(A.BuriedTreasure.ID) ~= 0 or Unit(player):HasBuffs(A.GrandMelee.ID) ~= 0 or Unit(player):HasBuffs(A.TrueBearing.ID) ~= 0)) and A.Shiv:IsInRange(unitID) and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0) and Player:GetStance() <= 1 then
                 return A.RollTheBones:Show(icon)
             end 
             --AoE (bladeflurry is also in CD(), this is to ensure correct prioitizaion for Burst on and off. The intent is for GetToggle(2, "AoE") to control bladeflurry, not isBurst.
@@ -695,7 +695,7 @@ A[3] = function(icon)
         --StealthCDs
         if StealthCDs() and isBurst 
         --TODO: review "or" here : the intent is for vanish to allow for in combat stealth CDs (RtB, MfD, and Ambush) but if vanish lasts so long you gain the stealth buff, we will just reopen instead which will also use stealth CDs based on user Opener Settings
-        and (Unit(player):HasBuffs(A.VanishStealth.ID) ~= 0 or (LastPlayerCastID == 1856 and Unit(player):HasBuffs(A.Stealth.ID) == 0)) then
+        and (Player:GetStance() == 2 or (LastPlayerCastID == 1856 and Player:GetStance() ~= 1)) then
             return true 
         end
         
@@ -719,21 +719,20 @@ A[3] = function(icon)
         end 
     end 
     
-	
-	
-	
-	
-    
     --Use BottledFlayedwingToxin if out of combat with other poisons. before stealth
     if A.BottledFlayedwingToxin:IsReady(unitID, true) and Unit(player):HasBuffs(A.FlayedwingToxin.ID) == 0 and Unit(player):CombatTime() == 0 and not IsMounted() then
         return A.BottledFlayedwingToxin:Show(icon)
     end
-    if GetToggle(2, "OOCStealth") and A.Stealth:IsReady(unitID, true) and A.Stealth:IsLatenced(GetGCD() + 0.5) and Unit(player):HasBuffs(A.Stealth.ID) == 0 and Unit(player):HasBuffs(A.VanishStealth.ID) == 0 and Unit(player):HasBuffs(A.Soulshape.ID) == 0 and Unit(player):CombatTime() == 0 and not IsMounted() then
+	--Summon Steward
+	if A.SummonSteward:IsReady(player) and GetItemCount(177278) <= 1 and Player:GetStance() == 0 and Unit(player):HasBuffs(A.Soulshape.ID) == 0 and Unit(player):CombatTime() == 0 and not IsMounted() then
+		return A.SummonSteward:Show(icon)
+	end
+	
+    if GetToggle(2, "OOCStealth") and A.Stealth:IsReady(unitID, true) and A.Stealth:IsLatenced(GetGCD() + 0.5) and Player:GetStance() == 0 and Unit(player):HasBuffs(A.Soulshape.ID) == 0 and Unit(player):CombatTime() == 0 and not IsMounted() then
         return A.Stealth:Show(icon)
     end
     
-	
-	
+
     --Poisons use UI settings to check if poison selected is ready, already applied and ooc
     if Unit(player):CombatTime() == 0 and not IsMounted() and not Player:IsMoving() then
         if GetToggle(2, "LethalPoison") == "InstantPoison" then
