@@ -70,6 +70,7 @@ Action[ACTION_CONST_ROGUE_OUTLAW] = {
     TricksOfTheTrade = Create({ Type = "Spell", ID = 57934}),
     PoolResource = Create({ Type = "Spell", ID = 97238,Hidden = true}),
     ShroudOfConcealment = Create({ Type = "Spell", ID = 114018}), 
+	Sap = Create({ Type = "Spell", ID = 6770}), 
     -- CDS
     AdrenalineRush = Create({ Type = "Spell", ID = 186286}),
     RollTheBones = Create({ Type = "Spell", ID = 315508}),
@@ -312,10 +313,12 @@ A[3] = function(icon)
     function EnemyRotation(unitID) 
         if not IsUnitEnemy(unitID) then return end
         if Unit(unitID):IsDead() then return end
+        if Unit(unitID):HasDeBuffs("BreakAble") > 0 and Unit(player):CombatTime() == 0 then return end		
         if UnitCanAttack(player, unitID) == false then return end
         --Stop Rotation if Vanish is set to off
         if Player:GetStance() == 2 and GetToggle(2, "VanishSetting") == 0 then return end		
         if IsMounted() then return end
+		if A.InstanceInfo.ID == 2286 and Unit(unitID):Name() == "Farra" then return end -- if in Necrotic Wake instance
         local isBurst = BurstIsON(unitID) -- @boolean
         
         --testing
@@ -720,7 +723,7 @@ A[3] = function(icon)
     end 
     
     --Use BottledFlayedwingToxin if out of combat with other poisons. before stealth
-    if A.BottledFlayedwingToxin:IsReady(unitID, true) and Unit(player):HasBuffs(A.FlayedwingToxin.ID) == 0 and Unit(player):CombatTime() == 0 and not IsMounted() then
+    if A.BottledFlayedwingToxin:IsReady(unitID, true) and Unit(player):HasBuffs(A.FlayedwingToxin.ID) == 0 and Player:GetStance() == 0 and Unit(player):CombatTime() == 0 and not IsMounted() then
         return A.BottledFlayedwingToxin:Show(icon)
     end
 	--Summon Steward
@@ -732,7 +735,6 @@ A[3] = function(icon)
         return A.Stealth:Show(icon)
     end
     
-
     --Poisons use UI settings to check if poison selected is ready, already applied and ooc
     if Unit(player):CombatTime() == 0 and not IsMounted() and not Player:IsMoving() then
         if GetToggle(2, "LethalPoison") == "InstantPoison" then
