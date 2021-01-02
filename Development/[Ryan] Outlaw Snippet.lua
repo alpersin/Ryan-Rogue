@@ -80,8 +80,9 @@ Action[ACTION_CONST_ROGUE_OUTLAW] = {
     Flagellation = Create({ Type = "Spell", ID = 323654}),
     ClaimFlagellation = Create({ Type = "Spell", ID = 346975,Hidden = true}),
     --PhialofSerenity = Create({ Type = "Spell", ID = 177278}),
+	SummonSteward = Create({ Type = "Spell", ID = 324739}), 
     --Conduits
-    --TripleThreat = Create({ Type = "Spell", ID = 323654}),
+    TripleThreat = Create({ Type = "Spell", ID = 341540}),
     --rollthebonesbuff
     Broadside = Create({ Type = "Spell", ID = 193356}),
     BuriedTreasure = Create({ Type = "Spell", ID = 199600}),
@@ -132,6 +133,7 @@ Action[ACTION_CONST_ROGUE_OUTLAW] = {
     PotionofUnbridledFury = Create({ Type = "Potion", ID = 169299}), 
     BottledFlayedwingToxin = Create({ Type = "Trinket", ID = 178742,Hidden = true}),
     InscrutableQuantumDevice = Create({ Type = "Trinket", ID = 179350,Hidden = true}),
+    
     -- Gladiator Badges/Medallions
     DreadGladiatorsMedallion = Create({ Type = "Trinket", ID = 161674}), 
     DreadCombatantsInsignia = Create({ Type = "Trinket", ID = 161676}), 
@@ -237,6 +239,8 @@ function Action:IsLatenced(delay)
     return TMW.time - (Temp.CastStartTime[self:Info()] or 0) > (delay or 0.1)
 end
 
+
+--[[
 local function GetByRangeTTD(count, range)
     -- @return number
     local total, total_ttd = 0, 0
@@ -257,6 +261,8 @@ local function GetByRangeTTD(count, range)
         return 10000
     end
 end 
+--]]
+
 
 local function InscrutableQuantumDeviceCheck()
     --@boolean true - Trinket will DPS or give stat buff, false - Trinket will heal or restore mana
@@ -530,7 +536,10 @@ A[3] = function(icon)
         end
         -- [[ CDs ]]
         local function CDs() -- indented fucntions are used from stealth/vanish
-            local EightYardTTD = GetByRangeTTD(MultiUnits:GetByRange(8),8) --@number average time to die of all targets in 8 yards
+            local EightYardTTD = A.MultiUnits:GetByRangeAreaTTD(8) --@number average time to die of all targets in 8 yards
+			
+			
+			
             local Item = UseItems(unitID)
             if Item and A.Shiv:IsInRange(unitID) then --prevent all items in stealth
                 return Item:Show(icon)
@@ -621,7 +630,7 @@ A[3] = function(icon)
                 return A.RollTheBones:Show(icon)
             end 
             --AoE (bladeflurry is also in CD(), this is to ensure correct prioitizaion for Burst on and off. The intent is for GetToggle(2, "AoE") to control bladeflurry, not isBurst.
-            if A.BladeFlurry:IsReady(unitID, true) and GetToggle(2, "AoE") and MultiUnits:GetByRange(8) >= 2 and GetByRangeTTD(MultiUnits:GetByRange(8),8) > 4 and Unit(player):HasBuffs(A.BladeFlurry.ID) <= 2 and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0) then
+            if A.BladeFlurry:IsReady(unitID, true) and GetToggle(2, "AoE") and MultiUnits:GetByRange(8) >= 2 and A.MultiUnits:GetByRangeAreaTTD(8) > 4 and Unit(player):HasBuffs(A.BladeFlurry.ID) <= 2 and (not GetToggle(1, "BossMods") or Unit(player):CombatTime() > 0) then
                 return A.BladeFlurry:Show(icon)
             end
             --MfD is a CD that resets if the target dies, no need to hold based on Burst setting, Can not be used on Totems
