@@ -180,6 +180,11 @@ local Temp = {
     end 
 end 
 
+local DefensiveCasts = {
+				[330423] = A.Feint,
+				[2] = "party2",
+}
+
 -- [1] CC AntiFake Rotation
 local function AntiFakeStun(unitID) 
     return 
@@ -240,31 +245,6 @@ function Action:IsLatenced(delay)
     return TMW.time - (Temp.CastStartTime[self:Info()] or 0) > (delay or 0.1)
 end
 
-
---[[
-local function GetByRangeTTD(count, range)
-    -- @return number
-    local total, total_ttd = 0, 0
-    for unitID in pairs(ActiveUnitPlates) do 
-        if not range or Unit(unitID):CanInterract(range) then 
-            total = total + 1
-            total_ttd = total_ttd + Unit(unitID):TimeToDie()
-        end 
-        
-        if count and total >= count then 
-            break 
-        end 
-    end 
-    
-    if total > 0 then 
-        return total_ttd / total 
-    else 
-        return 10000
-    end
-end 
---]]
-
-
 local function InscrutableQuantumDeviceCheck()
     --@boolean true - Trinket will DPS or give stat buff, false - Trinket will heal or restore mana
     for GUIDs, v in pairs(TeamCache.Friendly.GUIDs) do
@@ -303,7 +283,7 @@ A[3] = function(icon)
 	
 	-- stop rotation if stolen shademount
 	if Unit(player):HasBuffs(A.StolenShadehound.ID) ~= 0 then return end
-	
+	if A.InstanceInfo.ID == 2286 and Unit("target"):Name() == "Farra" then return end -- if in Necrotic Wake instance and targetting Companion, stop rotation to allow for covenant Buff cast to finish stealth breaks cast
     --Testing
 
 	
@@ -318,7 +298,7 @@ A[3] = function(icon)
         --Stop Rotation if Vanish is set to off
         if Player:GetStance() == 2 and GetToggle(2, "VanishSetting") == 0 then return end		
         if IsMounted() then return end
-		if A.InstanceInfo.ID == 2286 and Unit(unitID):Name() == "Farra" then return end -- if in Necrotic Wake instance
+
         local isBurst = BurstIsON(unitID) -- @boolean
         
         --testing
@@ -381,9 +361,9 @@ A[3] = function(icon)
             end
             return count
         end
-        
-        local function Interrupts()
-            if A.GetToggle(2, "InterruptList") and (IsInRaid() or A.InstanceInfo.KeyStone > 1) --uses ryan interrupt table
+
+		local function Interrupts()
+            if A.GetToggle(2, "InterruptList") and (A.InstanceInfo.ID >= 2284 and A.InstanceInfo.ID <= 2296) --uses ryan interrupt table in SL dungeons and raid instance IDs
             then
                 useKick, useCC, useRacial, notKickAble, castLeft = InterruptIsValid(unitID, "RyanInterrupts", true)
             else 
@@ -412,7 +392,8 @@ A[3] = function(icon)
                         return A.QuakingPalm:Show(icon) 
                     end 
                     if useCC 
-                    and A.Blind:IsReady(unitID) and A.Blind:AbsentImun(unitID, Temp.TotalAndPhysAndCC) 
+                    and A.Blind:IsReady(unitID) 
+					and A.Blind:AbsentImun(unitID, Temp.TotalAndPhysAndCC) 
                     and Unit(unitID):GetDR("disorient") > 0
                     and not Unit(unitID):IsBoss()
                     then 
@@ -457,12 +438,37 @@ A[3] = function(icon)
                     Feint >= 100 and (Unit(player):IsTankingAoE(16) or A.Elusiveness:IsSpellLearned()) and Unit(player):GetRealTimeDMG() > 0 and
                     (Unit(player):TimeToDieX(60) < 2 or
                         (A.IsInPvP and Unit(player):HealthPercent() < 80 and Unit(player):IsFocused(nil, true)))
-                ) or -- Custom
+                ) 
+				or -- Custom
                 (Feint < 100 and Unit(player):HealthPercent() < Feint))
             then 
                 return A.Feint:Show(icon)
             end
-            -- CrimsonVial 
+			
+			
+						--
+
+			--Feint Based on Target Casts
+			local CastTimeRemaining, _, spellID, _, _, isChannel = Unit(unitID):IsCastingRemains()
+			 		-- @return:	-- [1] Currect Casting Left Time (seconds) (@number)	-- [2] Current Casting Left Time (percent) (@number)	-- [3] spellID (@number)	-- [4] spellName (@string)	-- [5] notInterruptable (@boolean, false is able to be interrupted)	-- [6] isChannel (@boolean)
+			for key, val in pairs(DefensiveCasts) do 
+				if key == spellID and val:IsReady(player) then 
+					if isChannel == false and CastTimeRemaining <= 4 then 
+						return val:Show(icon)
+					end	
+					if isChannel == true then
+						return val:Show(icon)
+					end 
+				end 
+			end
+			
+			--]]
+			
+			
+			
+			
+			
+			-- CrimsonVial 
             local CrimsonVial = GetToggle(2, "CrimsonVial")
             if CrimsonVial >= 0 and A.CrimsonVial:IsReady(player) and Unit(player):HealthPercent() <= CrimsonVial then
                 return A.CrimsonVial:Show(icon)

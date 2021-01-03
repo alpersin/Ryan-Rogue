@@ -20,7 +20,6 @@ arenaIDs                                            = {
     [3] = "arena3",
 }
 
-
 local L                                                = setmetatable(
     {
         ruRU                                         = {InterruptName         = "SLs Mythic+ (by Ryan)",},
@@ -51,6 +50,7 @@ Factory[4].RyanInterrupts = StdUi:tGenerateMinMax({
             [332608] = { useKick = true, useCC = false, useRacial = false   }, --Lightning Discharge;       Kick	
             [328729] = { useKick = true, useCC = false, useRacial = false   }, --Dark Lotus;         		Kick	
             [332605] = { useKick = true, useCC = true, useRacial = true     }, --Hex;                 		Kick+CC
+            [332234] = { useKick = true, useCC = true, useRacial = true     }, --Essential Oil;        		Kick+CC			
             -- Halls of Attonement
             [325523] = { useKick = false, useCC = true, useRacial = true    }, --Deadly Thrust;             CC
             [326450] = { useKick = false, useCC = true, useRacial = true    }, --Loyal Beasts;              CC
@@ -92,10 +92,10 @@ Factory[4].RyanInterrupts = StdUi:tGenerateMinMax({
             [318949] = { useKick = false, useCC = false, useRacial = false  }, --Festering Belch;           Block            
             [319070] = { useKick = true, useCC = false, useRacial = false   }, --Corrosive Gunk;            Kick            
             [336451] = { useKick = false, useCC = true, useRacial = true    }, --Bulwark of Maldraxxus;     CC            
-            [328400] = { useKick = false, useCC = true, useRacial = true    }, 	--Stealthlings;             CC 
-            [328180] = { useKick = true, useCC = true, useRacial = true     }, 	--Gripping Infection; 		Kick+CC
+            [328400] = { useKick = false, useCC = true, useRacial = true    }, --Stealthlings;             	CC 
+            [328180] = { useKick = true, useCC = true, useRacial = true     }, --Gripping Infection; 		Kick+CC
             [321999] = { useKick = true, useCC = false, useRacial = false   }, --Viral Globs;            	Kick
-            [328429] = { useKick = false, useCC = true, useRacial = true    }, 	--Crushing Embrace;         CC
+            [328429] = { useKick = false, useCC = true, useRacial = true    }, --Crushing Embrace;         	CC
             [328094] = { useKick = true, useCC = false, useRacial = false   }, --Pestilence Bolt;           Kick 			
             --Sanguine Depths
             [319654] = { useKick = true, useCC = false, useRacial = false   }, --Hungering Drain;           Kick
@@ -115,7 +115,7 @@ Factory[4].RyanInterrupts = StdUi:tGenerateMinMax({
             [328137] = { useKick = true, useCC = false, useRacial = false   }, --Dark Pulse;                Kick
             [328331] = { useKick = true, useCC = false, useRacial = false   }, --Forced Confession;         Kick
 			[317661] = { useKick = true, useCC = false, useRacial = false   }, --Insidious Venom;         	Kick
-            [323804] = { useKick = false, useCC = true, useRacial = true    }, 	--Dark Seeker;             	CC			
+            [323804] = { useKick = false, useCC = true, useRacial = true    }, --Dark Seeker;             	CC			
             --Theater of Pain
             [341902] = { useKick = true, useCC = false, useRacial = false   }, --Unholy Fervor;         	Kick            
             [341969] = { useKick = true, useCC = true, useRacial = true     }, --Withering Discharge		Kick+CC
@@ -128,7 +128,8 @@ Factory[4].RyanInterrupts = StdUi:tGenerateMinMax({
             [341771] = { useKick = true, useCC = false, useRacial = false   }, --Grave Spike;				Kick			
 			[330532] = { useKick = false, useCC = true, useRacial = true    }, --Jagged Quarrel 			CC						
             [330875] = { useKick = true, useCC = false, useRacial = false   }, --Spirit Frost;				Kick	
-            [319669] = { useKick = true, useCC = false, useRacial = false   }, --Spectral Reach;			Kick	
+            [319669] = { useKick = true, useCC = false, useRacial = false   }, --Spectral Reach;			Kick
+            [342139] = { useKick = true, useCC = false, useRacial = false   }, --Battle Trance;				Kick			
 			-- Castle Nathria
             [325590] = { useKick = true, useCC = false, useRacial = false   }, --Scornful Blast;			Kick
             [328254] = { useKick = true, useCC = false, useRacial = false   }, --Shattering Ruby;			Kick
