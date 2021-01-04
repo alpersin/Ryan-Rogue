@@ -50,7 +50,8 @@ Factory[4].RyanInterrupts = StdUi:tGenerateMinMax({
             [332608] = { useKick = true, useCC = false, useRacial = false   }, --Lightning Discharge;       Kick	
             [328729] = { useKick = true, useCC = false, useRacial = false   }, --Dark Lotus;         		Kick	
             [332605] = { useKick = true, useCC = true, useRacial = true     }, --Hex;                 		Kick+CC
-            [332234] = { useKick = true, useCC = true, useRacial = true     }, --Essential Oil;        		Kick+CC			
+            [332234] = { useKick = true, useCC = true, useRacial = true     }, --Essential Oil;        		Kick+CC
+			[334664] = { useKick = false, useCC = true, useRacial = true    }, --Frightened Cries;          CC			
             -- Halls of Attonement
             [325523] = { useKick = false, useCC = true, useRacial = true    }, --Deadly Thrust;             CC
             [326450] = { useKick = false, useCC = true, useRacial = true    }, --Loyal Beasts;              CC

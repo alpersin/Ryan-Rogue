@@ -296,7 +296,7 @@ A[3] = function(icon)
         if Unit(unitID):HasDeBuffs("BreakAble") > 0 and Unit(player):CombatTime() == 0 then return end		
         if UnitCanAttack(player, unitID) == false then return end
         --Stop Rotation if Vanish is set to off
-        if Player:GetStance() == 2 and GetToggle(2, "VanishSetting") == 0 then return end		
+        if Unit(player):HasBuffs(A.Vanish.ID) ~= 0 and GetToggle(2, "VanishSetting") == 0 then return end		
         if IsMounted() then return end
 
         local isBurst = BurstIsON(unitID) -- @boolean
@@ -305,7 +305,7 @@ A[3] = function(icon)
         
         
         --Stealth with target enemy
-        if IsUnitEnemy(unitID) and A.Stealth:IsReady(unitID, true) and Player:GetStance() == 0 and Unit(player):HasBuffs(A.Soulshape.ID) == 0 and not IsMounted() then
+        if IsUnitEnemy(unitID) and A.Stealth:IsReady(unitID, true) and Player:GetStance() == 0 and not IsMounted() then --and Unit(player):HasBuffs(A.Soulshape.ID) == 0 apparently the wow API is shit and soulshape is also getstance == 2
             return A.Stealth:Show(icon)
         end
         -- kill Explosive Affix
@@ -446,7 +446,7 @@ A[3] = function(icon)
             end
 			
 			
-						--
+
 
 			--Feint Based on Target Casts
 			local CastTimeRemaining, _, spellID, _, _, isChannel = Unit(unitID):IsCastingRemains()
@@ -462,7 +462,7 @@ A[3] = function(icon)
 				end 
 			end
 			
-			--]]
+
 			
 			
 			
@@ -482,6 +482,25 @@ A[3] = function(icon)
             if not A.IsInPvP and A.Stoneform:IsRacialReady(player, true) and AuraIsValid(player, "UseDispel", "Dispel") then 
                 return A.Stoneform:Show(icon)
             end
+			
+			--Defensives Based on Target Casts
+			local CastTimeRemaining, _, spellID, _, _, isChannel = Unit(unitID):IsCastingRemains()
+			 		-- @return:	-- [1] Currect Casting Left Time (seconds) (@number)	-- [2] Current Casting Left Time (percent) (@number)	-- [3] spellID (@number)	-- [4] spellName (@string)	-- [5] notInterruptable (@boolean, false is able to be interrupted)	-- [6] isChannel (@boolean)
+			for key, val in pairs(DefensiveCasts) do 
+				if key == spellID and val:IsReady(player) then 
+					if isChannel == false and CastTimeRemaining <= 4 then 
+						return val:Show(icon)
+					end	
+					if isChannel == true then
+						return val:Show(icon)
+					end 
+				end 
+			end
+			
+			
+			
+			
+			
         end
         
         -- [[ Opener ]]
@@ -733,11 +752,11 @@ A[3] = function(icon)
         return A.BottledFlayedwingToxin:Show(icon)
     end
 	--Summon Steward
-	if A.SummonSteward:IsReady(player) and GetItemCount(177278) <= 1 and Player:GetStance() == 0 and Unit(player):HasBuffs(A.Soulshape.ID) == 0 and Unit(player):CombatTime() == 0 and not IsMounted() then
+	if A.SummonSteward:IsReady(player) and GetItemCount(177278) <= 1 and Player:GetStance() == 0  and Unit(player):CombatTime() == 0 and not IsMounted() then --and Unit(player):HasBuffs(A.Soulshape.ID) == 0 apparently the wow API is shit and soulshape is also getstance == 2
 		return A.SummonSteward:Show(icon)
 	end
 	
-    if GetToggle(2, "OOCStealth") and A.Stealth:IsReady(unitID, true) and A.Stealth:IsLatenced(GetGCD() + 0.5) and Player:GetStance() == 0 and Unit(player):HasBuffs(A.Soulshape.ID) == 0 and Unit(player):CombatTime() == 0 and not IsMounted() then
+    if GetToggle(2, "OOCStealth") and A.Stealth:IsReady(unitID, true) and A.Stealth:IsLatenced(GetGCD() + 0.5) and Player:GetStance() == 0 and Unit(player):CombatTime() == 0 and not IsMounted() then --and Unit(player):HasBuffs(A.Soulshape.ID) == 0 apparently the wow API is shit and soulshape is also getstance == 2
         return A.Stealth:Show(icon)
     end
     
