@@ -181,8 +181,8 @@ local Temp = {
 end 
 
 local DefensiveCasts = {
-				[330423] = A.Feint,
-				[2] = "party2",
+				[330423] = A.Feint, --fungistorm, PF, trash
+				[325360] = A.Feint, --Rite of Supremacy, SD, Third Boss
 }
 
 -- [1] CC AntiFake Rotation

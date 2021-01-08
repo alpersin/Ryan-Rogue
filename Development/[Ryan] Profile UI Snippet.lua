@@ -164,7 +164,7 @@ local SliderMarginOptions = { margin = { top = 10 } }
 local LayoutConfigOptions = { gutter = 6, padding = { left = 5, right = 5 } }
 A.Data.ProfileEnabled[A.CurrentProfile]             = true
 A.Data.ProfileUI                                     = {    
-    DateTime = "v3.4 (16.12.2020) #Inscrutable Quantum",
+    DateTime = "v4.0 (8.1.2021) #M+ Interrupts",
     [2] = {
         [ACTION_CONST_ROGUE_SUBTLETY] = {                  },
         
