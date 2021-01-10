@@ -284,7 +284,10 @@ A[3] = function(icon)
 	-- stop rotation if stolen shademount
 	if Unit(player):HasBuffs(A.StolenShadehound.ID) ~= 0 then return end
 	if A.InstanceInfo.ID == 2286 and Unit("target"):Name() == "Farra" then return end -- if in Necrotic Wake instance and targetting Companion, stop rotation to allow for covenant Buff cast to finish stealth breaks cast
-    --Testing
+    if Unit("target"):Name() == "Ashen Phylactery" then return end
+	
+	
+	--Testing
 
 	
 	
@@ -470,7 +473,7 @@ A[3] = function(icon)
 			
 			-- CrimsonVial 
             local CrimsonVial = GetToggle(2, "CrimsonVial")
-            if CrimsonVial >= 0 and A.CrimsonVial:IsReady(player) and Unit(player):HealthPercent() <= CrimsonVial then
+            if CrimsonVial >= 0 and A.CrimsonVial:IsReady(player) and Unit(player):HealthPercent() <= CrimsonVial and Unit(player):HasBuffs(A.CrimsonVial.ID) == 0 then
                 return A.CrimsonVial:Show(icon)
             end
             -- PhialofSerenity 
